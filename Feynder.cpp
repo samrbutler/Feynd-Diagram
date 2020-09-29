@@ -18,5 +18,5 @@ int main()
     };
 
     intdict nto1s{ generateDictionary(interactions) };
-    
+    std::cout << nto1s.size() << '\n';
 }
