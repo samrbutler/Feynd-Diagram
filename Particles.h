@@ -29,14 +29,14 @@ class Point {
 
 	//Set up a consecutive ID counter
 	static int next_id;
-	int m_id{};
+	int m_id;
 
 public:
 
-	//Default constructor with initialisation list
+	//Constructor
 	Point() : m_id{ ++next_id }
 	{
-		//No explicit constructor
+		//Initialiser list
 	}
 };
 
@@ -61,12 +61,12 @@ public:
 	//Toggle the active status of the external point
 	void toggleActive() { m_active = !m_active; }
 	
-	//No default constructor: you *must* define the particle type and externality on generation
+	//No default constructor: you *must* define at least the particle type and externality on generation
 	Particle() = delete;
 
-	//Constructor with initialisation list
+	//Construct given particle type, externality and (optionally) activity
 	Particle(P& PType, bool isExtern, bool isAct = true) : m_ptype{ PType }, m_active{ isAct }, m_isexternal{ isExtern }
 	{
-		//No explicit constructor
+		//Initialiser list
 	}
 };

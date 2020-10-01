@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "Interactions.h"
+#include "Particles.h"
 
 //Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
 intdict generateDictionary(const std::multiset<std::multiset<P>> &inters) {
@@ -40,4 +41,14 @@ intdict generateDictionary(const std::multiset<std::multiset<P>> &inters) {
     //Return the populated dictionary
     return nto1s;
 
+}
+
+bool Vertex::addLeg(Point pointtoadd) {
+    if (static_cast<int>(m_connections.size()) >= m_numlegs) {
+        return false;
+    }
+    else {
+        m_connections.push_back(pointtoadd);
+        return true;
+    }
 }

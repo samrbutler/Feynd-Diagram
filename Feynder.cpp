@@ -16,9 +16,6 @@ int main()
         {P::phi,P::psi,P::antipsi},
     };
 
-    intdict nto1s{ generateDictionary(interactions) };
-    std::cout << nto1s.size() << '\n';
-
-
+    intdict nto1{ generateDictionary(interactions) };
 
 }
