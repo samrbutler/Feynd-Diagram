@@ -6,6 +6,7 @@ enum class ParticleType {
 	phi,
 	psi,
 	antipsi,
+	chi
 };
 
 using P = ParticleType;

@@ -30,7 +30,7 @@ intdict generateDictionary(const std::multiset<std::multiset<P>> interactions) {
             //Remove this particle from the left hand side
             lefthand.erase(blh);
             //Pair up the left and right hand sides
-            std::map<std::multiset<P>, P> toInsert {std::make_pair(lefthand, righthand)};
+            std::multimap<std::multiset<P>, P> toInsert {std::make_pair(lefthand, righthand)};
             //Add to the dictionary
             nto1s.insert(toInsert);
         }
