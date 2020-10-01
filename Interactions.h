@@ -13,7 +13,7 @@
 using intdict = std::set<std::multimap<std::multiset<P>, P>>;
 
 //Function prototype for generation of the n->1 particle dictionary
-intdict generateDictionary(const std::multiset<std::multiset<P>> interactions);
+intdict generateDictionary(const std::multiset<std::multiset<P>>&);
 
 //Define a vertex class
 class Vertex : public Point {

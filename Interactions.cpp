@@ -8,13 +8,13 @@
 #include "Interactions.h"
 
 //Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
-intdict generateDictionary(const std::multiset<std::multiset<P>> interactions) {
+intdict generateDictionary(const std::multiset<std::multiset<P>> &inters) {
 
     //Create empty container
     intdict nto1s{};
 
     //Loop over all the interactions via iterators
-    for (auto interaction{ interactions.begin() }; interaction != interactions.end(); ++interaction) {
+    for (auto interaction{ inters.begin() }; interaction != inters.end(); ++interaction) {
         
         //AIM: Identify each element in turn and make it the product of an n-to-1 interaction
             
