@@ -1,3 +1,5 @@
+// Interactions.cpp : introduce the code relevant to particle interactions
+
 #include <set>
 #include <map>
 #include <iterator>

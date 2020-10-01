@@ -141,13 +141,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Vertices.cpp" />
+    <ClCompile Include="Diagram.cpp" />
+    <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Feynder.cpp" />
     <ClCompile Include="Interactions.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Diagram.h" />
+    <ClInclude Include="Feynder.h" />
     <ClInclude Include="Interactions.h" />
-    <ClInclude Include="Vertices.h" />
     <ClInclude Include="Particles.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

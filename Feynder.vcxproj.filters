@@ -21,7 +21,10 @@
     <ClCompile Include="Interactions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Vertices.cpp">
+    <ClCompile Include="Particles.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Diagram.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -29,10 +32,13 @@
     <ClInclude Include="Particles.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Vertices.h">
+    <ClInclude Include="Interactions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Interactions.h">
+    <ClInclude Include="Diagram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Feynder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
