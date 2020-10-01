@@ -12,10 +12,10 @@
 
 int main()
 {
-    const std::multiset<std::multiset<P>> interactions{
+    const n0dict interactions{
         {P::phi,P::psi,P::antipsi},
     };
 
-    intdict nto1{ generateDictionary(interactions) };
+    n1dict nto1{ generateDictionary(interactions) };
 
 }

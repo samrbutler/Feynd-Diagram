@@ -9,10 +9,10 @@
 #include "Particles.h"
 
 //Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
-intdict generateDictionary(const std::multiset<std::multiset<P>> &inters) {
+n1dict generateDictionary(const n0dict &inters) {
 
     //Create empty container
-    intdict nto1s{};
+    n1dict nto1s{};
 
     //Loop over all the interactions via iterators
     for (auto interaction{ inters.begin() }; interaction != inters.end(); ++interaction) {
