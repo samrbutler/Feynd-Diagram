@@ -1,8 +1,9 @@
 // Diagram.cpp : Code relevant to diagram construction and manipulation
 
 #include <vector>
+#include <algorithm>
+#include <functional>
 #include <utility>
-#include <bits.h>
 #include "Diagram.h"
 #include "Particles.h"
 #include "Interactions.h"
@@ -14,7 +15,7 @@ void Diagram::groupify(const n0dict& nto0, const n1dict& nto1) {
 
 }
 
-grouping getSubsets(std::vector<Particle> input) {
+grouping getSubsets(std::vector<Particle> &input) {
 	std::vector<std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>>> pairings{};
 	for (int i{}; i < pow(2, input.size()); ++i) {
 		std::vector<Particle> subset{};
@@ -36,13 +37,39 @@ grouping getSubsets(std::vector<Particle> input) {
 	return pairings;
 }
 
-std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> pairup) {
+bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2) {
+	int id1{ vec1[0].getID() };
+	int id2{ vec2[0].getID() };
+	return (id1<id2);
+}
+
+bool operator==( std::vector<std::vector<Particle>>& part1,  std::vector<std::vector<Particle>>& part2) {
+	if (part1.size() != part2.size())
+		return false;
+	for (int i{}; i < part1.size(); ++i) {
+		if (part1[i] != part2[i])
+			return false;
+	}
+	return true;
+}
+
+bool operator!=( std::vector<Particle>& part1, std::vector<Particle>& part2) {
+	if (part1.size() != part2.size())
+		return true;
+	for (int i{}; i < part1.size(); ++i) {
+		if (part1[i] != part2[i])
+			return true;
+	}
+	return false;
+}
+
+std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> &pairup) {
 	//Create the empty vector of groupings
-	std::vector<std::vector<std::vector<Particle>>> listofgroups{};
+	std::vector<std::vector<std::vector<Particle>>> list{};
 	//Extract the current vector of groups...
 	auto currentgroups{ pairup.first };
 	//...and add it to the new vector of groupings (i.e. we terminate pairing here)
-	listofgroups.push_back(currentgroups);
+	list.push_back(currentgroups);
 	//Get the vector of ungrouped elements
 	auto notPaired{ pairup.second };
 	//If we can form another group, do it  
@@ -61,9 +88,27 @@ std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vect
 				toadd.insert(toadd.end(), currentgroups.begin(), currentgroups.end());
 				toadd.insert(toadd.end(), newgroup.begin(), newgroup.end());
 				//Add this new grouping to the output
-				listofgroups.push_back(toadd);
+				list.push_back(toadd);
 			}
 		}		
 	}
-	return listofgroups;
+
+	std::vector<std::vector<std::vector<Particle>>> nodupes{};
+	for (int i{}; i < list.size(); ++i) {
+		for (int j{}; j < list[i].size(); ++j) {
+			std::sort(list[i][j].begin(), list[i][j].end());
+
+		}
+		std::sort(list[i].begin(), list[i].end());
+
+		bool isfound{ false };
+		for (auto dupe : nodupes) {
+			if (dupe == list[i])
+				isfound = true;
+		}
+		if (!isfound)
+			nodupes.push_back(list[i]);
+	}
+
+	return nodupes;
 }

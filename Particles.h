@@ -38,17 +38,25 @@ public:
 	{
 		//Initialiser list
 	}
+
+	//Private member mccess
+	int getID() const { return m_id; }
+
+	//Comparison functions
+	bool operator<(Point& point2) const { return (m_id < point2.getID()); }
+	bool operator==(Point& point2) const { return (m_id == point2.getID()); }
+	bool operator!=(Point& point2) const { return (m_id != point2.getID()); }
 };
 
 //Extend the point class to include particles
 class Particle : public Point {
 
 	//Particle type
-	const P m_ptype;
+	P m_ptype;
 	//Is this particle active in the algorithm
 	bool m_active;
 	//Is this an external particle
-	const bool m_isexternal;
+	bool m_isexternal;
 
 public:
 
@@ -65,7 +73,7 @@ public:
 	Particle() = delete;
 
 	//Construct given particle type, externality and (optionally) activity
-	Particle(P& PType, bool isExtern, bool isAct = true) : m_ptype{ PType }, m_active{ isAct }, m_isexternal{ isExtern }
+	Particle(P PType, bool isExtern, bool isAct = true) : m_ptype{ PType }, m_active{ isAct }, m_isexternal{ isExtern }
 	{
 		//Initialiser list
 	}

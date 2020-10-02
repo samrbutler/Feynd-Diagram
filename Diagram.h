@@ -3,6 +3,8 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
+#include <utility>
 
 #include "Particles.h"
 #include "Interactions.h"
@@ -37,6 +39,10 @@ public:
 
 };
 
-grouping getSubsets(std::vector<Particle> input);
+grouping getSubsets(std::vector<Particle> &input);
 
-std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> pairup);
+bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
+bool operator==(std::vector<std::vector<Particle>>& part1, std::vector<std::vector<Particle>>& part2);
+bool operator!=(std::vector<Particle>& part1, std::vector<Particle>& part2);
+
+std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> &pairup);
