@@ -43,9 +43,10 @@ public:
 	int getID() const { return m_id; }
 
 	//Comparison functions
-	bool operator<(Point& point2) const { return (m_id < point2.getID()); }
-	bool operator==(Point& point2) const { return (m_id == point2.getID()); }
-	bool operator!=(Point& point2) const { return (m_id != point2.getID()); }
+	bool operator<(const Point& point2) const { return (m_id < point2.getID()); }
+	bool operator>(const Point& point2) const { return (m_id > point2.getID()); }
+	bool operator==(const Point& point2) const { return (m_id == point2.getID()); }
+	bool operator!=(const Point& point2) const { return (m_id != point2.getID()); }
 };
 
 //Extend the point class to include particles

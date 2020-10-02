@@ -2,17 +2,12 @@
 
 #pragma once
 
+#include "Groups.h"
 #include "Interactions.h"
 #include "Particles.h"
 
-#include <algorithm>
-#include <utility>
 #include <vector>
 
-//Define the type aliases for groupings
-using grouping = std::vector<std::vector<Particle>>;
-using pairedgrouping = std::pair<grouping, std::vector<Particle>> ;
-using listofgroupings = std::vector<grouping>;
 
 //Define a class for diagrams
 class Diagram {
@@ -35,11 +30,3 @@ public:
 	}
 
 };
-
-std::vector<pairedgrouping> getSubsets(std::vector<Particle> &input);
-
-bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
-bool operator==(std::vector<std::vector<Particle>>& part1, std::vector<std::vector<Particle>>& part2);
-bool operator!=(std::vector<Particle>& part1, std::vector<Particle>& part2);
-
-listofgroupings getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> &pairup);

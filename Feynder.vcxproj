@@ -142,6 +142,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Diagram.cpp" />
+    <ClCompile Include="Groups.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Feynder.cpp" />
     <ClCompile Include="Interactions.cpp" />
@@ -149,6 +150,7 @@
   <ItemGroup>
     <ClInclude Include="Diagram.h" />
     <ClInclude Include="Feynder.h" />
+    <ClInclude Include="Groups.h" />
     <ClInclude Include="Interactions.h" />
     <ClInclude Include="Particles.h" />
   </ItemGroup>

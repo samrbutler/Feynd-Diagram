@@ -2,6 +2,7 @@
 #include "Feynder.h"
 
 #include "Diagram.h"
+#include "Groups.h"
 #include "Interactions.h"
 #include "Particles.h"
 
@@ -23,9 +24,10 @@ int main()
     Particle p3{ P::phi,true };
     Particle p4{ P::phi,true };
 	Particle p5{ P::phi,true };
+	Particle p6{ P::phi,true };
 
 	std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> pairup{};
-	pairup.second = { p1,p2,p3,p4 };
+	pairup.second = { p1,p2,p3,p4,p5 };
 	auto list = getGroupings(pairup);
 
 	for (auto thisgrouping : list) {
