@@ -12,16 +12,18 @@ enum class ParticleType {
 	phi,
 	psi,
 	antipsi,
+	chi
 };
 
 //Define alias
 using P = ParticleType;
 
 //Define the particle/antiparticle dictionary
-inline const std::map<P, P> ParticleDict{
+inline const std::map<P, P> AntiParticleDict{
 	{P::phi		,P::phi},
 	{P::psi		,P::antipsi},
-	{P::antipsi	,P::psi}
+	{P::antipsi	,P::psi},
+	{P::chi		,P::chi}
 };
 
 //Define a basic point class
@@ -79,3 +81,5 @@ public:
 		//Initialiser list
 	}
 };
+
+P getAntiParticle(P part);

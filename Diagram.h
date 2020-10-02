@@ -29,4 +29,5 @@ public:
 		//No explicit constructor
 	}
 
+	//listofgroupings generateGroupings(n1dict& dictionary);
 };

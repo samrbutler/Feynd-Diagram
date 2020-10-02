@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <iterator>
+#include <typeinfo>
 #include <map>
 #include <set>
 
@@ -33,7 +34,7 @@ n1dict generateDictionary(const n0dict &inters) {
             //Remove this particle from the left hand side
             lefthand.erase(blh);
             //Pair up the left and right hand sides
-            std::multimap<std::multiset<P>, P> toInsert {std::make_pair(lefthand, righthand)};
+            std::pair<std::multiset<P>, P> toInsert {std::make_pair(lefthand, righthand)};
             //Add to the dictionary
             nto1s.insert(toInsert);
         }
@@ -43,12 +44,34 @@ n1dict generateDictionary(const n0dict &inters) {
 
 }
 
-bool Vertex::addLeg(Point pointtoadd) {
-    if (static_cast<int>(m_connections.size()) >= m_numlegs) {
+//Connect points to the vertex, return true if successful
+bool Vertex::addLeg(std::vector<Point>& pointstoadd) {
+    //Check if we can actually add this many legs
+    if (m_numlegs- static_cast<int>(m_connections.size())- static_cast<int>(pointstoadd.size())<0) {
         return false;
     }
+    //If we can, then do it
     else {
-        m_connections.push_back(pointtoadd);
+        for (auto point: pointstoadd)
+            m_connections.push_back(point);
         return true;
     }
+}
+
+//
+std::vector<P> getProducts(n1dict& dictionary, std::vector<Particle>& group) {
+    std::vector<P> vec{};
+    for (auto interaction : dictionary) {
+        auto interactionleft = interaction.first;
+        std::multiset<P> groupnames{};
+        int activecount{};
+        for (auto element : group) {
+            activecount += element.isActive();
+            groupnames.insert(element.getType());
+        }
+        if ((groupnames == interactionleft)&&(activecount>=1)) {
+            vec.push_back(interaction.second);
+        }
+    }
+    return vec;
 }

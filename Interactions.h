@@ -9,11 +9,11 @@
 #include <map>
 #include <set>
 
-//Define a type alias for the n->1 interaction dictionary
-using n1dict = std::set<std::multimap<std::multiset<P>, P>>;
-
 //Define a type alias for the n->0 interaction dictionary
 using n0dict = std::multiset<std::multiset<P>>;
+
+//Define a type alias for the n->1 interaction dictionary
+using n1dict = std::set<std::pair<std::multiset<P>, P>>;
 
 //Function prototype for generation of the n->1 particle dictionary
 n1dict generateDictionary(const std::multiset<std::multiset<P>>&);
@@ -44,5 +44,7 @@ public:
 	}
 
 	//Add a leg: returns true if this was successful
-	bool addLeg(Point);
+	bool addLeg(std::vector<Point>& pointstoadd);
 };
+
+std::vector<P> getProducts(n1dict& dictionary, std::vector<Particle>& group);
