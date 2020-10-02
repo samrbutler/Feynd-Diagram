@@ -33,7 +33,10 @@ public:
 	}
 
 	//Function to group up vertices
-	grouping groupify(const n0dict& nto0, const n1dict& nto1);
+	void groupify(const n0dict& nto0, const n1dict& nto1);
 
 };
 
+grouping getSubsets(std::vector<Particle> input);
+
+std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> pairup);
