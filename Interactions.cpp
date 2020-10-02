@@ -1,12 +1,12 @@
 // Interactions.cpp : introduce the code relevant to particle interactions
-
-#include <set>
-#include <map>
-#include <iterator>
-#include <iostream>
-
 #include "Interactions.h"
+
 #include "Particles.h"
+
+#include <iostream>
+#include <iterator>
+#include <map>
+#include <set>
 
 //Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
 n1dict generateDictionary(const n0dict &inters) {

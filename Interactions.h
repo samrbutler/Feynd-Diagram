@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <set>
-#include <map>
-#include <iterator>
-#include <iostream>
-
 #include "Particles.h"
+
+#include <iostream>
+#include <iterator>
+#include <map>
+#include <set>
 
 //Define a type alias for the n->1 interaction dictionary
 using n1dict = std::set<std::multimap<std::multiset<P>, P>>;

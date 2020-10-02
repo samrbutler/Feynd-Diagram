@@ -1,71 +1,78 @@
 // Diagram.cpp : Code relevant to diagram construction and manipulation
+#include "Diagram.h"
 
-#include <vector>
+#include "Interactions.h"
+#include "Particles.h"
+
 #include <algorithm>
 #include <functional>
 #include <utility>
-#include "Diagram.h"
-#include "Particles.h"
-#include "Interactions.h"
+#include <vector>
 
-//Defines function groupify to take interaction dictionariesand a vector of Particles, returning all possible allowed groupings
-void Diagram::groupify(const n0dict& nto0, const n1dict& nto1) {
-	std::vector<Particle> nodes = m_externs;
-	
-
-}
-
-grouping getSubsets(std::vector<Particle> &input) {
-	std::vector<std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>>> pairings{};
-	for (int i{}; i < pow(2, input.size()); ++i) {
-		std::vector<Particle> subset{};
-		std::vector<Particle> notsubset{};
-		for (int j{}; j < static_cast<int>(input.size()); ++j) {
-			if ((i & (1 << j)) != 0)
-				subset.push_back(input[j]);
-			else
-				notsubset.push_back(input[j]);
-		}
-		if (subset.size() >= 2) {
-			std::vector<std::vector<Particle>> toadd{};
-			toadd.push_back(subset);
-			auto pairup{ std::make_pair(toadd, notsubset) };
-			pairings.push_back(pairup);
-		}
-		
-	}
-	return pairings;
-}
-
+//Overload operator < to sort particle vectors by their first elements
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2) {
-	int id1{ vec1[0].getID() };
-	int id2{ vec2[0].getID() };
-	return (id1<id2);
+	return (vec1[0].getID() < vec2[0].getID());
 }
 
-bool operator==( std::vector<std::vector<Particle>>& part1,  std::vector<std::vector<Particle>>& part2) {
-	if (part1.size() != part2.size())
-		return false;
-	for (int i{}; i < part1.size(); ++i) {
-		if (part1[i] != part2[i])
-			return false;
-	}
-	return true;
-}
-
-bool operator!=( std::vector<Particle>& part1, std::vector<Particle>& part2) {
+//Overload inequality operator for particle vectors
+bool operator!=(std::vector<Particle>& part1, std::vector<Particle>& part2) {
 	if (part1.size() != part2.size())
 		return true;
-	for (int i{}; i < part1.size(); ++i) {
+	for (int i{}; i < static_cast<int>(part1.size()); ++i) {
 		if (part1[i] != part2[i])
 			return true;
 	}
 	return false;
 }
 
-std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> &pairup) {
+//Overload equality operator for groupings
+bool operator==(grouping& part1, grouping& part2) {
+	if (part1.size() != part2.size())
+		return false;
+	for (int i{}; i < static_cast<int>(part1.size()); ++i) {
+		if (part1[i] != part2[i])
+			return false;
+	}
+	return true;
+}
+
+//Given a vector of particles, produce all suitable subsets
+std::vector<pairedgrouping> getSubsets(std::vector<Particle>& input) {
+	//Set up the container
+	std::vector<pairedgrouping> pairings{};
+	//Loop over all binary representations from 0 to 2^(number of particles)-1
+	for (int i{}; i < pow(2, input.size()); ++i) {
+		//Set up containers
+		std::vector<Particle> subset{};
+		std::vector<Particle> notsubset{};
+		//Loop over all the bits in i
+		for (int j{}; j < static_cast<int>(input.size()); ++j) {
+			//If the bit j is a 1, add the jth particle to the subset
+			if ((i & (1 << j)) != 0)
+				subset.push_back(input[j]);
+			//If not, add it to the ungrouped set
+			else
+				notsubset.push_back(input[j]);
+		}
+		//We don't care about the subset if it is size 1 or trivial
+		if (subset.size() >= 2) {
+			//Create and add the subset to a vector of vectors
+			std::vector<std::vector<Particle>> toadd{};
+			toadd.push_back(subset);
+			//Pair up the subset and its complement
+			auto pairup{ std::make_pair(toadd, notsubset) };
+			//Add it to the return vector
+			pairings.push_back(pairup);
+		}
+	}
+	return pairings;
+}
+
+//Given a paired grouping, extract and append more groups from the presently ungrouped elements
+//NOTE: This is a recursive function
+listofgroupings getGroupings(pairedgrouping &pairup) {
 	//Create the empty vector of groupings
-	std::vector<std::vector<std::vector<Particle>>> list{};
+	listofgroupings list{};
 	//Extract the current vector of groups...
 	auto currentgroups{ pairup.first };
 	//...and add it to the new vector of groupings (i.e. we terminate pairing here)
@@ -77,11 +84,11 @@ std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vect
 		//Go through each of the new subsets
 		for (auto pairup : getSubsets(notPaired)) {
 			//And initiate recursion
-			auto newgroupings{ getGroupings(pairup) };
+			listofgroupings newgroupings{ getGroupings(pairup) };
 			//For each new grouping that is available
-			for (auto newgroup : newgroupings) {
+			for (grouping newgroup : newgroupings) {
 				//Create an empty container
-				std::vector<std::vector<Particle>> toadd{};
+				grouping toadd{};
 				//Reserve the space
 				toadd.reserve(currentgroups.size() + newgroup.size());
 				//Insert the current grouping and the new grouping
@@ -92,23 +99,28 @@ std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vect
 			}
 		}		
 	}
-
-	std::vector<std::vector<std::vector<Particle>>> nodupes{};
-	for (int i{}; i < list.size(); ++i) {
-		for (int j{}; j < list[i].size(); ++j) {
+	//AIM: Remove duplicates
+	//Set up container for duplicates
+	listofgroupings nodupes{};
+	//Loop over groupings
+	for (int i{}; i < static_cast<int>(list.size()); ++i) {
+		//Loop over each group
+		for (int j{}; j < static_cast<int>(list[i].size()); ++j) {
+			//Sort this group
 			std::sort(list[i][j].begin(), list[i][j].end());
-
 		}
+		//Sort the overall grouping
 		std::sort(list[i].begin(), list[i].end());
-
+		//Check for duplicates
 		bool isfound{ false };
+		//Loop over the groupings we've already found
 		for (auto dupe : nodupes) {
 			if (dupe == list[i])
 				isfound = true;
 		}
+		//If we haven't found this yet, add it to the list
 		if (!isfound)
 			nodupes.push_back(list[i]);
 	}
-
 	return nodupes;
 }

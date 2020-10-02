@@ -1,15 +1,14 @@
 // Feynder.cpp : Define the 'main' function.
+#include "Feynder.h"
 
-#include <map>
-#include <iterator>
-#include <typeinfo>
-#include <iostream>
-#include <algorithm>
-#include <string>
-
-#include "Particles.h"
-#include "Interactions.h"
 #include "Diagram.h"
+#include "Interactions.h"
+#include "Particles.h"
+
+#include <algorithm>
+#include <iostream>
+#include <iterator>
+#include <map>
 
 int main()
 {

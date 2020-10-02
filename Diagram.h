@@ -2,17 +2,17 @@
 
 #pragma once
 
-#include <vector>
+#include "Interactions.h"
+#include "Particles.h"
+
 #include <algorithm>
 #include <utility>
+#include <vector>
 
-#include "Particles.h"
-#include "Interactions.h"
-
-//Define the type alias for a grouping
-using grouping = std::vector<std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>>>;
-
-
+//Define the type aliases for groupings
+using grouping = std::vector<std::vector<Particle>>;
+using pairedgrouping = std::pair<grouping, std::vector<Particle>> ;
+using listofgroupings = std::vector<grouping>;
 
 //Define a class for diagrams
 class Diagram {
@@ -34,15 +34,12 @@ public:
 		//No explicit constructor
 	}
 
-	//Function to group up vertices
-	void groupify(const n0dict& nto0, const n1dict& nto1);
-
 };
 
-grouping getSubsets(std::vector<Particle> &input);
+std::vector<pairedgrouping> getSubsets(std::vector<Particle> &input);
 
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
 bool operator==(std::vector<std::vector<Particle>>& part1, std::vector<std::vector<Particle>>& part2);
 bool operator!=(std::vector<Particle>& part1, std::vector<Particle>& part2);
 
-std::vector<std::vector<std::vector<Particle>>> getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> &pairup);
+listofgroupings getGroupings(std::pair<std::vector<std::vector<Particle>>, std::vector<Particle>> &pairup);

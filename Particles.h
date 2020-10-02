@@ -3,9 +3,9 @@
 #pragma once
 
 #include <map>
-#include <vector>
 #include <set>
 #include <tuple>
+#include <vector>
 
 //Define particle names
 enum class ParticleType {
