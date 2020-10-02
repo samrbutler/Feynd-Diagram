@@ -47,4 +47,6 @@ public:
 	bool addLeg(std::vector<Point>& pointstoadd);
 };
 
+std::multiset<P> vec2multiset(std::vector<Particle>& group);
+
 std::vector<P> getProducts(n1dict& dictionary, std::vector<Particle>& group);

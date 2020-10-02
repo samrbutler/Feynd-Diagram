@@ -3,6 +3,7 @@
 
 #include "Particles.h"
 
+#include <algorithm>
 #include <iostream>
 #include <iterator>
 #include <typeinfo>
@@ -58,19 +59,32 @@ bool Vertex::addLeg(std::vector<Point>& pointstoadd) {
     }
 }
 
-//
+std::multiset<P> vec2multiset(std::vector<Particle>& group) {
+    std::multiset<P> groupnames{};
+    for (auto element : group) {
+        //Transfer the particle name to the multiset
+        groupnames.insert(element.getType());
+    }
+    return groupnames;
+}
+
+//Given a particular particle group, return the antiparticles of products of the interaction from a dictionary
+//Note: antiparticles are returned ready for use as external vertices in the next subdiagram
 std::vector<P> getProducts(n1dict& dictionary, std::vector<Particle>& group) {
+    //Empty return vector
     std::vector<P> vec{};
+    //Count the number of active Particles
+    int activecount{ std::count_if(group.begin(),group.end(),[](Particle& p) -> bool {return p.isActive(); }) };
+    //Return early if this is less than 1
+    if (activecount < 1)
+        return vec;
+    auto groupnames{vec2multiset(group)};
+    //Loop over all interactions in the dictionary
     for (auto interaction : dictionary) {
-        auto interactionleft = interaction.first;
-        std::multiset<P> groupnames{};
-        int activecount{};
-        for (auto element : group) {
-            activecount += element.isActive();
-            groupnames.insert(element.getType());
-        }
-        if ((groupnames == interactionleft)&&(activecount>=1)) {
-            vec.push_back(interaction.second);
+        //Check if the multiset matches the current interaction
+        if (groupnames == interaction.first) {
+            //And add its antiparticle to the product list
+            vec.push_back(getAntiParticle(interaction.second));
         }
     }
     return vec;

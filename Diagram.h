@@ -29,5 +29,6 @@ public:
 		//No explicit constructor
 	}
 
-	//listofgroupings generateGroupings(n1dict& dictionary);
+	bool isVertex(n0dict& dictionary);
+
 };
