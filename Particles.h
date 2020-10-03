@@ -26,7 +26,8 @@ inline const std::map<P, P> AntiParticleDict{
 	{P::chi		,P::chi}
 };
 
-//Define a basic point class
+//Define a basic point container class
+//This provides all vertices and particles with unique identifiers
 class Point {
 
 	//Set up a consecutive ID counter
@@ -35,7 +36,7 @@ class Point {
 
 public:
 
-	//Constructor
+	//Default constructor
 	Point() : m_id{ ++next_id }
 	{
 		//Initialiser list
@@ -58,8 +59,6 @@ class Particle : public Point {
 	P m_ptype;
 	//Is this particle active in the algorithm
 	bool m_active;
-	//Is this an external particle
-	bool m_isexternal;
 
 public:
 
@@ -67,7 +66,6 @@ public:
 	P getType() { return m_ptype; }
 	bool isActive() { return m_active; }
 	void setActive(bool act) { m_active = act; }
-	bool isExternal() { return m_isexternal; }
 
 	//Toggle the active status of the external point
 	void toggleActive() { m_active = !m_active; }
@@ -76,7 +74,7 @@ public:
 	Particle() = delete;
 
 	//Construct given particle type, externality and (optionally) activity
-	Particle(P PType, bool isExtern, bool isAct = true) : m_ptype{ PType }, m_active{ isAct }, m_isexternal{ isExtern }
+	Particle(P PType, bool isAct = true) : m_ptype{ PType }, m_active{ isAct }
 	{
 		//Initialiser list
 	}

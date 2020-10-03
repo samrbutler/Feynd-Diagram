@@ -37,9 +37,9 @@ bool operator==(const grouping& part1, const grouping& part2) {
 }
 
 //Given a vector of particles, produce all suitable subsets
-std::vector<pairedgrouping> getSubsets(std::vector<Particle>& input) {
+listofpairedgroupings getSubsets(std::vector<Particle>& input) {
 	//Set up the container
-	std::vector<pairedgrouping> pairings{};
+	listofpairedgroupings pairings{};
 	//Loop over all binary representations from 0 to 2^(number of particles)-1
 	for (int i{}; i < pow(2, input.size()); ++i) {
 		//Set up containers
@@ -70,13 +70,13 @@ std::vector<pairedgrouping> getSubsets(std::vector<Particle>& input) {
 
 //Given a paired grouping, extract and append more groups from the presently ungrouped elements
 //NOTE: This is a recursive function
-listofgroupings getGroupings(pairedgrouping& pairup) {
+listofpairedgroupings getGroupings(pairedgrouping& pairup) {
 	//Create the empty vector of groupings
-	listofgroupings list{};
-	//Extract the current vector of groups...
+	listofpairedgroupings list{};
+	//Extract the current vector of groups
 	auto currentgroups{ pairup.first };
-	//...and add it to the new vector of groupings (i.e. we terminate pairing here)
-	list.push_back(currentgroups);
+	//Add the current pairing to the list (i.e. we terminate pairing here)
+	list.push_back(pairup);
 	//Get the vector of ungrouped elements
 	auto notPaired{ pairup.second };
 	//If we can form another group, do it  
@@ -84,38 +84,38 @@ listofgroupings getGroupings(pairedgrouping& pairup) {
 		//Go through each of the new subsets
 		for (auto pairup : getSubsets(notPaired)) {
 			//And initiate recursion
-			listofgroupings newgroupings{ getGroupings(pairup) };
+			listofpairedgroupings newgroupings{ getGroupings(pairup) };
 			//For each new grouping that is available
-			for (grouping newgroup : newgroupings) {
+			for (pairedgrouping newgroup : newgroupings) {
 				//Create an empty container
 				grouping toadd{};
 				//Reserve the space
-				toadd.reserve(currentgroups.size() + newgroup.size());
+				toadd.reserve(currentgroups.size() + newgroup.first.size());
 				//Insert the current grouping and the new grouping
 				toadd.insert(toadd.end(), currentgroups.begin(), currentgroups.end());
-				toadd.insert(toadd.end(), newgroup.begin(), newgroup.end());
+				toadd.insert(toadd.end(), newgroup.first.begin(), newgroup.first.end());
 				//Add this new grouping to the output
-				list.push_back(toadd);
+				list.push_back(std::make_pair(toadd, newgroup.second));
 			}
 		}
 	}
 	//AIM: Remove duplicates
 	//Set up container for duplicates
-	listofgroupings nodupes{};
+	listofpairedgroupings nodupes{};
 	//Loop over groupings
 	for (int i{}; i < static_cast<int>(list.size()); ++i) {
 		//Loop over each group
-		for (int j{}; j < static_cast<int>(list[i].size()); ++j) {
+		for (int j{}; j < static_cast<int>(list[i].first.size()); ++j) {
 			//Sort this group
-			std::sort(list[i][j].begin(), list[i][j].end());
+			std::sort(list[i].first[j].begin(), list[i].first[j].end());
 		}
 		//Sort the overall grouping
-		std::sort(list[i].begin(), list[i].end());
+		std::sort(list[i].first.begin(), list[i].first.end());
 		//Check for duplicates
 		bool isfound{ false };
 		//Loop over the groupings we've already found
 		for (auto dupe : nodupes) {
-			if (dupe == list[i])
+			if (dupe.first == list[i].first)
 				isfound = true;
 		}
 		//If we haven't found this yet, add it to the list

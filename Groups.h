@@ -2,7 +2,6 @@
 
 #pragma once
 
-#include "Interactions.h"
 #include "Particles.h"
 
 #include <algorithm>
@@ -14,11 +13,12 @@
 using grouping = std::vector<std::vector<Particle>>;
 using pairedgrouping = std::pair<grouping, std::vector<Particle>>;
 using listofgroupings = std::vector<grouping>;
+using listofpairedgroupings = std::vector<pairedgrouping>;
 
-std::vector<pairedgrouping> getSubsets(std::vector<Particle>& input);
+listofpairedgroupings getSubsets(std::vector<Particle>& input);
 
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
 bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>& part2);
 bool operator==(const grouping& part1, const grouping& part2);
 
-listofgroupings getGroupings(pairedgrouping& pairup);
+listofpairedgroupings getGroupings(pairedgrouping& pairup);

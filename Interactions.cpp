@@ -1,6 +1,7 @@
 // Interactions.cpp : introduce the code relevant to particle interactions
 #include "Interactions.h"
 
+#include "Groups.h"
 #include "Particles.h"
 
 #include <algorithm>
@@ -46,15 +47,15 @@ n1dict generateDictionary(const n0dict &inters) {
 }
 
 //Connect points to the vertex, return true if successful
-bool Vertex::addLeg(std::vector<Point>& pointstoadd) {
+bool Vertex::addLegs(std::vector<int>& pointstoadd) {
     //Check if we can actually add this many legs
-    if (m_numlegs- static_cast<int>(m_connections.size())- static_cast<int>(pointstoadd.size())<0) {
+    if (m_numlegs- static_cast<int>(m_connection_ids.size())- static_cast<int>(pointstoadd.size())<0) {
         return false;
     }
     //If we can, then do it
     else {
         for (auto point: pointstoadd)
-            m_connections.push_back(point);
+            m_connection_ids.push_back(point);
         return true;
     }
 }
@@ -68,11 +69,38 @@ std::multiset<P> vec2multiset(std::vector<Particle>& group) {
     return groupnames;
 }
 
+bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary) {
+    //Get the grouplist
+    grouping grouplist{ pair.first };
+    if (static_cast<int>(grouplist.size()) == 0) return false;
+    //Loop over all groups in the grouplist: if any group is invalid the whole grouping is invalid
+    for (auto group : grouplist) {
+        //Count the number of active particles: if this is less than 1, the group isn't valid
+        int activecount{ std::count_if(group.begin(),group.end(),[](Particle& p) -> bool {return p.isActive(); }) };
+        if (activecount < 1) return false;
+        //Get a multiset of particle names in the current group
+        auto groupnames{ vec2multiset(group) };
+        //Suppose the group isn't valid
+        bool validgroup{ false };
+        //Loop over all interactions in the dictionary
+        for (auto interaction : dictionary) {
+            //If the current group matches this interaction, the group is valid
+            if (groupnames == interaction.first) {
+                validgroup = true;
+            }
+        }
+        if (!validgroup)
+            return false;
+    }
+    //If all groups are valid, the grouping is valid
+    return true;
+}
+
 //Given a particular particle group, return the antiparticles of products of the interaction from a dictionary
 //Note: antiparticles are returned ready for use as external vertices in the next subdiagram
-std::vector<P> getProducts(n1dict& dictionary, std::vector<Particle>& group) {
+std::vector<P> getProducts(std::vector<Particle>& group, const n1dict& dictionary) {
     //Empty return vector
-    std::vector<P> vec{};
+    std::vector<P> vec;
     //Count the number of active Particles
     int activecount{ std::count_if(group.begin(),group.end(),[](Particle& p) -> bool {return p.isActive(); }) };
     //Return early if this is less than 1
@@ -88,4 +116,53 @@ std::vector<P> getProducts(n1dict& dictionary, std::vector<Particle>& group) {
         }
     }
     return vec;
+}
+
+listofpairedproducts getNewExterns(listofpairedgroupings& grps,const n1dict& nto1) {
+    listofpairedproducts container;
+    //Loop through each grouping
+    for (pairedgrouping pair : grps) {
+        //If this grouping is invalid, add an empty vector
+        if (!isGroupingValid(pair, nto1)) {
+            container.push_back({});
+        }
+        else {
+            //Get the grouped elements
+            auto groups{ pair.first };
+            //Count how many groups there are
+            int numgroups = static_cast<int>(groups.size());
+            //Receive a list of possible products for each group
+            std::vector<std::vector<P>> productlist;
+            for (auto group : groups) {
+                productlist.push_back(getProducts(group, nto1));
+            }
+            //Set up index counters for each of the groups
+            int* indexmax{ new int[numgroups] {} };
+            int* currentindex{ new int[numgroups] {} };
+            for (int i{}; i < numgroups; ++i) {
+                currentindex[i] = 0;
+                indexmax[i] = static_cast<int>(productlist[i].size());
+            }
+            //Produce all possible combinations of selecting one element for each group
+            while (true) {
+                std::vector<P> toadd{};
+                for (int i{}; i < numgroups; ++i) {
+                    toadd.push_back(productlist[i][currentindex[i]]);
+                }
+                container.push_back(std::make_pair(toadd, pair.second));
+                int nextgroup{ numgroups - 1 };
+                while (nextgroup >= 0 && (currentindex[nextgroup] + 1 >= indexmax[nextgroup])) {
+                    --nextgroup;
+                }
+                if (nextgroup < 0) break;
+                currentindex[nextgroup]++;
+                for (int i{ nextgroup + 1 }; i < numgroups; ++i) {
+                    currentindex[i] = 0;
+                }
+            }
+            delete[] currentindex;
+            delete[] indexmax;
+        }
+    }
+    return container;
 }
