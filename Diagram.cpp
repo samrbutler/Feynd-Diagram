@@ -53,11 +53,11 @@ Process::Process(std::vector<P>& incoming, std::vector<P>& outgoing) {
 	m_outgoing = outgoing ;
 }
 
-std::vector<Diagram> connect(Diagram& proc, const n0dict& nto0, const n1dict& nto1) {
-	auto externs{ proc.getExterns() };
+std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nto1) {
+	auto externs{ diag.getExterns() };
 	int s{ static_cast<int>(externs.size()) };
 	//Check to see if we can form a vertex
-	if (proc.isVertex(nto0)) {
+	if (diag.isVertex(nto0)) {
 		//If we can, add all particle IDs to a list
 		std::vector<int> vec{};
 		for (Particle part : externs) {
@@ -77,6 +77,11 @@ std::vector<Diagram> connect(Diagram& proc, const n0dict& nto0, const n1dict& nt
 		listofpairedgroupings groupinglist{ getGroupings(input) };
 		//Get a list of possible new vertices
 		listofpairedproducts vertexlist{ getNewExterns(groupinglist, nto1) };
-		//TODO: Go through the 
+		/* TODO:
+			1) Go through the list of products and add vertices and new particles where appropriate
+			2) Define a new diagram with these vertices
+			3) Initiate recursion to connect the subdiagrams
+			4) Manage the termination conditions
+		*/
 	}
 }
