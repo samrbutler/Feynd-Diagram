@@ -1,12 +1,12 @@
-// Feynder.h : 
+/*Feynder.h
+
+*/
 
 #pragma once
 
 #include "Diagram.h"
+#include "Groups.h"
 #include "Interactions.h"
 #include "Particles.h"
 
-#include <algorithm>
 #include <iostream>
-#include <iterator>
-#include <map>

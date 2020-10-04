@@ -1,4 +1,13 @@
-// Diagram.h : Set up diagram construction
+/*Diagram.h :
+	Classes
+		- Diagram
+			> Define a class for a diagram
+		- Process (inherits Diagram)
+			> Extend the diagram class to allow initial setup of a process
+	Function declarations
+		- operator<<
+		- connect
+*/
 
 #pragma once
 
@@ -6,12 +15,15 @@
 #include "Interactions.h"
 #include "Particles.h"
 
+#include <iterator>
 #include <vector>
 
 
-//Define a class for diagrams
+//Define a class for a diagram
 class Diagram {
+
 protected:	
+
 	//External particles
 	std::vector<Particle> m_externs;
 	//Internal vertices
@@ -19,34 +31,42 @@ protected:
 
 public:
 
-	//Private member access
-	std::vector<Particle>& getExterns() { return m_externs; }
-	std::vector<Vertex>& getVertices() { return m_vertices; }
+	//Return the external particles
+	const std::vector<Particle>& getExterns() const { return m_externs; }
+	//Return the vertices of the diagram
+	const std::vector<Vertex>& getVertices() const { return m_vertices; }
 
-	//Declare a default constructor for inheritance
-	Diagram() = default;
+	//Default constructor of any empty diagram
+	Diagram() : m_externs{}, m_vertices{} {};
 
-	//Constructor with initialisation list
-	Diagram(std::vector<Particle>& externs) : m_externs{ externs }, m_vertices{ }
-	{
-		//No explicit constructor
-	}
+	//Construct a diagram from a vector of particles
+	Diagram(std::vector<Particle>& externs) : m_externs{ externs }, m_vertices{ } {}
 
-	//Construct with vertices
 	Diagram(std::vector<Particle>& externs, Vertex vertex);
+
+	//Add a vertex to the diagram
+	void addVertex(Vertex vert) { m_vertices.push_back(vert); }
 	
+	void addVertices(std::vector<Vertex> verts);
+
 	bool isVertex(const n0dict& dictionary);
+	
 };
 
+//Extend the diagram class to allow initial setup of a process
 class Process : public Diagram {
 
-	//Store incoming and outgoing particle names
+	//Incoming particle names
 	std::vector<P> m_incoming;
+	//Outgoing particle names
 	std::vector<P> m_outgoing;
 
 public:
+
 	//Create a process from incoming and outgoing particle names
-	Process(std::vector<P>& incoming, std::vector<P>& outgoing);
+	Process(std::vector<P> incoming, std::vector<P> outgoing);
 };
 
-std::vector<Diagram> connect(Diagram& proc,const n0dict& nto0, const n1dict& nto1);
+std::ostream& operator<<(std::ostream& out, const Diagram& diag);
+
+std::vector<Diagram> connect(Diagram& diag,const n0dict& nto0, const n1dict& nto1,bool debug = false);

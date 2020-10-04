@@ -143,6 +143,7 @@
   <ItemGroup>
     <ClCompile Include="Diagram.cpp" />
     <ClCompile Include="Groups.cpp" />
+    <ClCompile Include="Model.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Feynder.cpp" />
     <ClCompile Include="Interactions.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="Feynder.h" />
     <ClInclude Include="Groups.h" />
     <ClInclude Include="Interactions.h" />
+    <ClInclude Include="Model.h" />
     <ClInclude Include="Particles.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

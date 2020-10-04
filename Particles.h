@@ -1,13 +1,36 @@
-// Particles.h : Set up classes and types relating to particles
+/*Groups.h :
+	Enum classes
+		- ParticleType
+			> the names of particles appearing in the model
+	Type aliases
+		- P
+			> an alias for the ParticleType enum class
+	Global constants
+		- AntiParticleDict
+			> define the antiparticles for every particle in the model
+	Classes
+		- Point
+			> A point container class
+		- Particle (inherits Point)
+			> Extends the point class to add functionality for particles
+	Function declarations
+		- operator<<
+		- operator<
+		- operator!=
+		- getAntiParticle
+*/
 
 #pragma once
 
+#include <algorithm>
+#include <iostream>
+#include <iterator>
 #include <map>
 #include <set>
 #include <tuple>
 #include <vector>
 
-//Define particle names
+//The names of particles appearing in the model
 enum class ParticleType {
 	phi,
 	psi,
@@ -15,10 +38,10 @@ enum class ParticleType {
 	chi
 };
 
-//Define alias
+//Alias for the ParticleType enum class
 using P = ParticleType;
 
-//Define the particle/antiparticle dictionary
+//The antiparticles for every particle in the model
 inline const std::map<P, P> AntiParticleDict{
 	{P::phi		,P::phi},
 	{P::psi		,P::antipsi},
@@ -26,58 +49,58 @@ inline const std::map<P, P> AntiParticleDict{
 	{P::chi		,P::chi}
 };
 
-//Define a basic point container class
-//This provides all vertices and particles with unique identifiers
+//A point container class
 class Point {
 
-	//Set up a consecutive ID counter
+	//Consecutive ID counter
 	static int next_id;
 	int m_id;
 
 public:
 
-	//Default constructor
-	Point() : m_id{ ++next_id }
-	{
-		//Initialiser list
-	}
+	//Default constructor to initialise the ID
+	Point() : m_id{ ++next_id } {}
 
-	//Private member mccess
+	//Return the ID of the point
 	int getID() const { return m_id; }
 
-	//Comparison functions
+	//Overload operator< to compare point IDs
 	bool operator<(const Point& point2) const { return (m_id < point2.getID()); }
+	//Overload operator> to compare point IDs
 	bool operator>(const Point& point2) const { return (m_id > point2.getID()); }
+	//Overload operator== to compare point IDs
 	bool operator==(const Point& point2) const { return (m_id == point2.getID()); }
+	//Overload operator!= to compare point IDs
 	bool operator!=(const Point& point2) const { return (m_id != point2.getID()); }
 };
 
-//Extend the point class to include particles
+//Extends the point class to add functionality for particles
 class Particle : public Point {
 
 	//Particle type
 	P m_ptype;
-	//Is this particle active in the algorithm
+	//Is this particle marked as active for the algorithm
 	bool m_active;
 
 public:
 
-	//Private member access
-	P getType() { return m_ptype; }
-	bool isActive() { return m_active; }
-	void setActive(bool act) { m_active = act; }
+	//Return the type of the particle
+	P getType() const { return m_ptype; }
+	//Return the activity status of the particle
+	bool isActive() const { return m_active; }
 
-	//Toggle the active status of the external point
-	void toggleActive() { m_active = !m_active; }
-	
-	//No default constructor: you *must* define at least the particle type and externality on generation
+	//Set the activity status of the particle
+	void setActive(bool act) { m_active = act; }
+		
+	//Delete the default constructor: you *must* define at least the particle type on generation
 	Particle() = delete;
 
-	//Construct given particle type, externality and (optionally) activity
-	Particle(P PType, bool isAct = true) : m_ptype{ PType }, m_active{ isAct }
-	{
-		//Initialiser list
-	}
+	//Construct given particle type and (optionally) activity
+	Particle(const P PType, const bool isAct = true) : m_ptype{ PType }, m_active{ isAct } {}
 };
 
-P getAntiParticle(P part);
+std::ostream& operator<<(std::ostream& out, const P part);
+bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
+bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>& part2);
+
+P getAntiParticle(const P part);
