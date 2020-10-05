@@ -1,4 +1,4 @@
-/*Feynder.h
+/*FeyndDiagram.h
 
 */
 

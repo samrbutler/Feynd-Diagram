@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Feynder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Interactions.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,6 +30,9 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="FeyndDiagram.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Particles.h">
@@ -44,13 +44,13 @@
     <ClInclude Include="Diagram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Feynder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Groups.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FeyndDiagram.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

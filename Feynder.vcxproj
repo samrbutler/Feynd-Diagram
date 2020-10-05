@@ -24,6 +24,7 @@
     <ProjectGuid>{903589ca-9a74-4679-836f-e4524d3d87c8}</ProjectGuid>
     <RootNamespace>Feynder</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>FeyndDiagram</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -145,12 +146,12 @@
     <ClCompile Include="Groups.cpp" />
     <ClCompile Include="Model.cpp" />
     <ClCompile Include="Particles.cpp" />
-    <ClCompile Include="Feynder.cpp" />
+    <ClCompile Include="FeyndDiagram.cpp" />
     <ClCompile Include="Interactions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagram.h" />
-    <ClInclude Include="Feynder.h" />
+    <ClInclude Include="FeyndDiagram.h" />
     <ClInclude Include="Groups.h" />
     <ClInclude Include="Interactions.h" />
     <ClInclude Include="Model.h" />

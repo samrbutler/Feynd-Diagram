@@ -1,9 +1,9 @@
-/*Feynder.cpp
+/*FeyndDiagram.cpp
     Function definitions
         - int main()
 */
 
-#include "Feynder.h"
+#include "FeyndDiagram.h"
 
 #include "Diagram.h"
 #include "Groups.h"

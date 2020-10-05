@@ -28,11 +28,6 @@
 #include <vector>
 
 
-//A dictionary for n->0 interactions
-using n0dict = std::multiset<std::multiset<P>>;
-//A dictionary for n->1 interactions
-using n1dict = std::set<std::pair<std::multiset<P>, P>>;
-
 //The names of particles appearing in the model
 namespace Model {
 	enum class ParticleType {
@@ -45,6 +40,10 @@ namespace Model {
 
 //Alias for the ParticleType enum class
 using P = Model::ParticleType;
+//A dictionary for n->0 interactions
+using n0dict = std::multiset<std::multiset<P>>;
+//A dictionary for n->1 interactions
+using n1dict = std::set<std::pair<std::multiset<P>, P>>;
 
 namespace Model {
 	//Define the n->0 dictionary
