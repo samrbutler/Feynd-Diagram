@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{903589ca-9a74-4679-836f-e4524d3d87c8}</ProjectGuid>
+    <ProjectGuid>{00B34562-F55F-4B37-BB67-FD0B169D0C6E}</ProjectGuid>
     <RootNamespace>Feynder</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>FeyndDiagram</ProjectName>
@@ -156,6 +156,9 @@
     <ClInclude Include="Interactions.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Particles.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
