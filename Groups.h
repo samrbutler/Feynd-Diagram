@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "Model.h"
 #include "Particles.h"
 
 #include <algorithm>

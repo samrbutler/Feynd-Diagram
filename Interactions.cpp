@@ -5,8 +5,6 @@
     Function definitions
         - std::multiset<P> vec2multiset(const std::vector<Particle>& group)
             > Given a vector of particles, return a multiset of particlenames
-        - n1dict generateDictionary(const n0dict& inters)
-            > Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
         - bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary)
             > Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
         - std::vector<P> getProducts(std::vector<Particle>& group, const n1dict& dictionary)
@@ -19,6 +17,7 @@
 #include "Interactions.h"
 
 #include "Groups.h"
+#include "Model.h"
 #include "Particles.h"
 
 #include <algorithm>
@@ -56,46 +55,7 @@ std::multiset<P> vec2multiset(const std::vector<Particle>& group) {
     return groupnames;
 }
 
-//Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
-n1dict generateDictionary(const n0dict& inters) {
 
-    //Create empty container
-    n1dict nto1s{};
-
-    //Loop over all the interactions via iterators
-    for (auto interaction{ inters.begin() }; interaction != inters.end(); ++interaction) {
-
-        //Aim: Identify each element in turn and make it the product of an n-to-1 interaction
-
-        //Loop over all the particles in the current interaction
-        for (int i{}; i < static_cast<int>(interaction->size()); ++i) {
-
-            //Prepare a copy of the multiset...
-            auto lefthand = *interaction;
-
-            //...and store its location
-            auto blh{ lefthand.begin() };
-
-            //Advance the pointer to the correct particle
-            std::advance(blh, i);
-
-            //Extract the product particle and store
-            auto righthand = *blh;
-
-            //Remove this particle from the left hand side
-            lefthand.erase(blh);
-
-            //Pair up the left and right hand sides
-            std::pair<std::multiset<P>, P> toInsert{ std::make_pair(lefthand, righthand) };
-
-            //Add to the dictionary
-            nto1s.insert(toInsert);
-        }
-    }
-
-    //Return the populated dictionary
-    return nto1s;
-}
 
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
 bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary) {

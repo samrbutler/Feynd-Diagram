@@ -1,9 +1,5 @@
 /*Interactions.h :
 	Type aliases
-		- n0dict
-			> A dictionary for n->0 interactions
-		- n1dict
-			> A dictionary for n->1 interactions
 		- listofproducts
 			> A list of the products following the interactions prescribed by a grouping
 	Classes
@@ -11,7 +7,6 @@
 			> Extends the point class to add functionality for vertices
 	Function declarations
 		- vec2multiset
-		- generateDictionary
 		- isGroupingValid
 		- getProducts
 		- getNewExterns
@@ -20,6 +15,7 @@
 #pragma once
 
 #include "Groups.h"
+#include "Model.h"
 #include "Particles.h"
 
 #include <algorithm>
@@ -28,10 +24,6 @@
 #include <map>
 #include <set>
 
-//A dictionary for n->0 interactions
-using n0dict = std::multiset<std::multiset<P>>;
-//A dictionary for n->1 interactions
-using n1dict = std::set<std::pair<std::multiset<P>, P>>;
 //A list of the products following the interactions prescribed by a grouping
 using listofproducts = std::vector<std::vector<P>>;
 
@@ -66,7 +58,6 @@ public:
 };
 
 std::multiset<P> vec2multiset(const std::vector<Particle>& group);
-n1dict generateDictionary(const std::multiset<std::multiset<P>>&);
 bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary);
 std::vector<P> getProducts(std::vector<Particle>& group, const n1dict& dictionary);
 listofproducts getNewExterns(pairedgrouping& pair, const n1dict& nto1);

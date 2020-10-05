@@ -13,6 +13,7 @@
 
 #include "Groups.h"
 #include "Interactions.h"
+#include "Model.h"
 #include "Particles.h"
 
 #include <iterator>
@@ -69,4 +70,4 @@ public:
 
 std::ostream& operator<<(std::ostream& out, const Diagram& diag);
 
-std::vector<Diagram> connect(Diagram& diag,const n0dict& nto0, const n1dict& nto1,bool debug = false);
+std::vector<Diagram> connect(Diagram& diag,const n0dict& nto0 = Model::Interactions, const n1dict& nto1 = Model::NTO1,bool debug = false);

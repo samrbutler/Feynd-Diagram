@@ -1,13 +1,4 @@
 /*Groups.h :
-	Enum classes
-		- ParticleType
-			> the names of particles appearing in the model
-	Type aliases
-		- P
-			> an alias for the ParticleType enum class
-	Global constants
-		- AntiParticleDict
-			> define the antiparticles for every particle in the model
 	Classes
 		- Point
 			> A point container class
@@ -22,6 +13,8 @@
 
 #pragma once
 
+#include "Model.h"
+
 #include <algorithm>
 #include <iostream>
 #include <iterator>
@@ -29,25 +22,6 @@
 #include <set>
 #include <tuple>
 #include <vector>
-
-//The names of particles appearing in the model
-enum class ParticleType {
-	phi,
-	psi,
-	antipsi,
-	chi
-};
-
-//Alias for the ParticleType enum class
-using P = ParticleType;
-
-//The antiparticles for every particle in the model
-inline const std::map<P, P> AntiParticleDict{
-	{P::phi		,P::phi},
-	{P::psi		,P::antipsi},
-	{P::antipsi	,P::psi},
-	{P::chi		,P::chi}
-};
 
 //A point container class
 class Point {
@@ -102,5 +76,3 @@ public:
 std::ostream& operator<<(std::ostream& out, const P part);
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
 bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>& part2);
-
-P getAntiParticle(const P part);

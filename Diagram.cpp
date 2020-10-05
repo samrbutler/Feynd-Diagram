@@ -22,6 +22,7 @@
 
 #include "Groups.h"
 #include "Interactions.h"
+#include "Model.h"
 #include "Particles.h"
 
 #include <iterator>

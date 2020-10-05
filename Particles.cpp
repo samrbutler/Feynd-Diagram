@@ -15,6 +15,8 @@
 
 #include "Particles.h"
 
+#include "Model.h"
+
 #include <iostream>
 #include <vector>
 
@@ -57,6 +59,3 @@ bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>&
     //They must now be equal
     return false;
 }
-
-//Given a particle, return the name of its antiparticle
-P getAntiParticle(const P part) { return AntiParticleDict.at(part); }
