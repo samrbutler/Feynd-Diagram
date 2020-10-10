@@ -6,7 +6,7 @@
 			> Add a vector of vertices to the diagram
 		- bool Diagram::isVertex(const n0dict& dictionary)
 			> Return true if the external particles of the current diagram can form a vertex with two active particles
-	Process member function definitions	
+	Process member function definitions
 		- Process::Process(std::vector<P> incoming, std::vector<P> outgoing)
 			> Create a process from incoming and outgoing particle names
 	Operator overloads
@@ -32,7 +32,7 @@
 #include <vector>
 
 //Construct a diagram from a vector of particles and a single vertex
-Diagram::Diagram(const std::vector<Particle>& externs,const Vertex& vertex) {
+Diagram::Diagram(const std::vector<Particle>& externs, const Vertex& vertex) {
 	m_vertices.push_back(vertex);
 	m_externs = externs;
 }
@@ -46,13 +46,13 @@ void Diagram::addVertices(const std::vector<Vertex>& verts) {
 bool Diagram::isVertex(const n0dict& dictionary) const
 {
 	//If we only have 1 particle this isn't a vertex
-	if (static_cast<int>(m_externs.size()) == 1) return false;
+	if (m_externs.size() == 1) return false;
 	else {
 		//Count the number of active particles: return early if this is less than 2
 		if (std::count_if(m_externs.begin(), m_externs.end(), [](const Particle& p) -> bool {return p.isActive(); }) < 2) return false;
 
 		//Check if we have 2 particles
-		if (static_cast<int>(m_externs.size()) == 2) {
+		if (m_externs.size() == 2) {
 			//Check if this is a propagator (i.e. a particle and its antiparticle meet)
 			if (m_externs[0].getType() == getAntiParticle(m_externs[1].getType())) return true;
 
@@ -87,8 +87,8 @@ Process::Process(const std::vector<P> incoming, const std::vector<P> outgoing) {
 		m_externs.push_back(Particle(getAntiParticle(part), true));
 	}
 	//Store the particle names
-	m_incoming = incoming ;
-	m_outgoing = outgoing ;
+	m_incoming = incoming;
+	m_outgoing = outgoing;
 }
 
 //Allow for output of a diagram to std::cout
@@ -103,13 +103,13 @@ std::ostream& operator<< (std::ostream& out, const Diagram& diag) {
 		//...so display the propagator type and the connected point IDs
 		if (legids.size() == 2) {
 			std::cout << "\tPropagator | ";
-			std::cout << legtypes[0] << " (" << legids[0] << ","<<legids[1]<<"), ";
+			std::cout << legtypes[0] << " (" << legids[0] << "," << legids[1] << "), ";
 		}
 
 		//Otherwise this is a vertex, so display the connected point types and their IDs
 		else {
 			std::cout << "\t    Vertex | ";
-			for (int i{}; i < static_cast<int>(legids.size()); ++i) {
+			for (size_t i{}; i < legids.size(); ++i) {
 				std::cout << legtypes[i] << " (" << legids[i] << "), ";
 			}
 		}
@@ -135,7 +135,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 	}
 
 	//Store the number of external particles
-	int s{ static_cast<int>(externs.size()) };
+	size_t s{ externs.size() };
 
 	//Check to see if we can form a vertex
 	if (diag.isVertex(nto0)) {
@@ -154,11 +154,11 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 		}
 
 		//Return a single diagram consisting of the external points and a vertex connecting them
-		return std::vector<Diagram> {Diagram(externs, Vertex(idstoadd,typestoadd))};
+		return std::vector<Diagram> {Diagram(externs, Vertex(idstoadd, typestoadd))};
 	}
 
 	//If we don't have a vertex but there are now two or fewer particles left, this process has failed, so return an empty vector
-	else if (s<=2) {
+	else if (s <= 2) {
 		//DEBUG: Declare a failure
 		if (debug) {
 			std::cout << "FAILED : RETURNING\n";
@@ -226,7 +226,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 			}
 
 			//Skip this grouping if it doesn't produce any valid interactions
-			if ((prodlist.size()==0||prodlist.size()==1)&&(prodlist[0].size()==0)) {
+			if ((prodlist.size() == 0 || prodlist.size() == 1) && (prodlist[0].size() == 0)) {
 				//DEBUG : Declare the grouping to be invalid
 				if (debug) {
 					std::cout << "GROUPING INVALID : CONTINUING\n";
@@ -238,16 +238,16 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 			}
 
 			//Go through each possible interaction product
-			for (int j{}; j < static_cast<int>(prodlist.size()); ++j) {
+			for (size_t j{}; j < prodlist.size(); ++j) {
 				//Set up the new particle and vertex containers
 				std::vector<Particle> particlestoadd;
 				std::vector<Vertex> verticestoadd;
 
 				//Go through each of the groups that have been formed
-				for (int i{}; i < static_cast<int>(grp.first.size()); ++i) {
+				for (size_t i{}; i < grp.first.size(); ++i) {
 					//Set up the new particle information containers for vertex production
-					std::vector<int> idstoadd{};
-					std::vector<P> typestoadd{};
+					std::vector<int> idstoadd;
+					std::vector<P> typestoadd;
 
 					//Add the old particles that have "merged"
 					for (const Particle& oldpart : grp.first[i]) {
@@ -263,7 +263,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 					//DEBUG: Print out the vertex that's going to be added
 					if (debug) {
 						std::cout << "Adding a vertex:\n\t";
-						for (int k{}; k < static_cast<int>(idstoadd.size()); ++k) {
+						for (size_t k{}; k < idstoadd.size(); ++k) {
 							std::cout << typestoadd[k] << ", " << idstoadd[k] << " | ";
 						}
 						std::cout << '\n';
@@ -314,7 +314,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 					returnvec.push_back(newdiag);
 				}
 			}
-			
+
 		}
 
 		//DEBUG: Declare a return up the chain recursion

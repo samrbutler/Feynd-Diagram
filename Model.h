@@ -62,7 +62,7 @@ namespace Model {
 }
 
 P getAntiParticle(const P part);
-n1dict generateDictionary(const n0dict& = Model::Interactions);
+n1dict generateDictionary(const n0dict & = Model::Interactions);
 
 namespace Model {
 	inline const n1dict NTO1{ generateDictionary() };

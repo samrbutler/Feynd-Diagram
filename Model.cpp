@@ -29,7 +29,7 @@ n1dict generateDictionary(const n0dict& inters) {
         //Aim: Identify each element in turn and make it the product of an n-to-1 interaction
 
         //Loop over all the particles in the current interaction
-        for (int i{}; i < static_cast<int>(interaction->size()); ++i) {
+        for (size_t i{}; i < interaction->size(); ++i) {
 
             //Prepare a copy of the multiset...
             std::multiset<P> lefthand = *interaction;

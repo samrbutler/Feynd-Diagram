@@ -65,7 +65,7 @@ public:
 
 	//Set the activity status of the particle
 	void setActive(const bool act) { m_active = act; }
-		
+
 	//Delete the default constructor: you *must* define at least the particle type on generation
 	Particle() = delete;
 

@@ -30,7 +30,7 @@ bool operator==(const grouping& part1, const grouping& part2) {
 	if (part1.size() != part2.size()) return false;
 
 	//Return false if any of the groups are different
-	for (int i{}; i < static_cast<int>(part1.size()); ++i) {
+	for (size_t i{}; i < part1.size(); ++i) {
 		if (part1[i] != part2[i]) return false;
 	}
 
@@ -50,7 +50,7 @@ listofpairedgroupings getSubsets(const std::vector<Particle>& input) {
 		std::vector<Particle> notsubset{};
 
 		//Loop over all the bits in i
-		for (int j{}; j < static_cast<int>(input.size()); ++j) {
+		for (size_t j{}; j < input.size(); ++j) {
 			//If the bit j is a 1, add the jth particle to the subset
 			if ((i & (1 << j)) != 0) subset.push_back(input[j]);
 			//If not, add it to the ungrouped set
@@ -89,7 +89,7 @@ listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
 	const std::vector<Particle>& notPaired{ pairup.second };
 
 	//If we can form another group, do it  
-	if (static_cast<int>(notPaired.size()) > 1) {
+	if (notPaired.size() > 1) {
 		//Go through each of the new subsets
 		for (const pairedgrouping& pairup : getSubsets(notPaired)) {
 			//Initiate recursion to get groupings from unpaired elements
@@ -116,9 +116,9 @@ listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
 	listofpairedgroupings nodupes{};
 
 	//Loop over groupings
-	for (int i{}; i < static_cast<int>(list.size()); ++i) {
+	for (size_t i{}; i < list.size(); ++i) {
 		//Loop over each group in the grouping
-		for (int j{}; j < static_cast<int>(list[i].first.size()); ++j) {
+		for (size_t j{}; j < list[i].first.size(); ++j) {
 			//Sort this group
 			std::sort(list[i].first[j].begin(), list[i].first[j].end());
 		}
