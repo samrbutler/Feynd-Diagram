@@ -1,24 +1,24 @@
-/*Diagram.cpp :
-	Vertex member function definitions
-		- Diagram::Diagram(std::vector<Particle>& externs, Vertex vertex)
-			> Construct a diagram from a vector of particles and a single vertex
-		- void Diagram::addVertices(std::vector<Vertex> verts)
-			> Add a vector of vertices to the diagram
-		- bool Diagram::isVertex(const n0dict& dictionary)
-			> Return true if the external particles of the current diagram can form a vertex with two active particles
-	Process member function definitions
-		- Process::Process(std::vector<P> incoming, std::vector<P> outgoing)
-			> Create a process from incoming and outgoing particle names
-	Operator overloads
-		- std::ostream& operator<< (std::ostream& out, const Diagram& diag)
-			> Allow for output of a diagram to std::cout
-	Function definitions
-		- std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nto1, bool debug = false)
-			> Given a diagram and interaction dictionaries, return a vector of all possible completed tree-level diagrams
-			> Set debug to true for verbose terminal output
-
-	TO DO:
-		- Add code in operator>> when propagator distinction is implemented
+/*Diagram.cpp : implements the Diagram and Process classes and defines the tree
+*	Vertex member function definitions
+*		- Diagram::Diagram (from std::vector<Particle> and Vertex)
+*			> Construct a diagram from a vector of particles and a single vertex
+*		- Diagram::addVertices
+*			> Add a vector of vertices to the diagram
+*		- Diagram::isVertex
+*			> Return true if the external particles of the current diagram can form a vertex with two active particles
+*	Process member function definitions
+*		- Process::Process (from two std::vector<P>)
+*			> Create a process from incoming and outgoing particle names
+*	Operator overloads
+*		- operator<< (Diagram)
+*			> Allow for output of a diagram to std::cout
+*	Function definitions
+*		- connect
+*			> Given a diagram and interaction dictionaries, return a vector of all possible completed tree-level diagrams
+*			> Set debug to true for verbose terminal output
+*
+*	TO DO:
+*		- Add code in operator>> when propagator distinction is implemented
 */
 
 #include "Diagram.h"

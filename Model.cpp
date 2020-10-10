@@ -1,9 +1,9 @@
-/*Model.cpp :
-    Function definitions
-        - P getAntiParticle(const P part)
-            > Given a particle, return the name of its antiparticle
-        - n1dict generateDictionary(const n0dict& inters)
-            > Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
+/*Model.cpp : Code relevant to the particle model in use
+*    Function definitions
+*        - getAntiParticle
+*            > Given a particle, return the name of its antiparticle
+*        - generateDictionary
+*            > Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
 */
 
 #include "Model.h"

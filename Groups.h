@@ -1,15 +1,15 @@
 /*Groups.h :
-	Type aliases
-		- grouping
-			> a list of groups of particles
-		- pairedgrouping
-			> a pair consisting of a grouping and a list of ungrouped particles
-		- listofgroupings
-		- listofpairedgroupings
-	Function declarations
-		- operator==
-		- getSubsets
-		- getGroupings
+*	Type aliases
+*		- grouping
+*			> a list of groups of particles
+*		- pairedgrouping
+*			> a pair consisting of a grouping and a list of ungrouped particles
+*		- listofgroupings
+*		- listofpairedgroupings
+*	Function declarations
+*		- operator== (grouping)
+*		- getSubsets
+*		- getGroupings
 */
 
 #pragma once

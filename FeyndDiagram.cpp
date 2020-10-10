@@ -1,6 +1,6 @@
 /*FeyndDiagram.cpp
-	Function definitions
-		- int main()
+*	Function definitions
+*		- main
 */
 
 #include "FeyndDiagram.h"

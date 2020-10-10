@@ -1,3 +1,5 @@
+//Timer.cpp : Define the elapsed function for the Timer class
+
 #include "Timer.h"
 
 double Timer::elapsed() const {

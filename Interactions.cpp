@@ -1,17 +1,17 @@
-/*Interactions.cpp :
-	Vertex class: member function definitions
-		- bool Vertex::addLegs(const std::vector<int>& idstoadd, const std::vector<P>& typestoadd)
-			> Add a point to the vertex if we can and return true if this was successful
-	Function definitions
-		- std::multiset<P> vec2multiset(const std::vector<Particle>& group)
-			> Given a vector of particles, return a multiset of particlenames
-		- bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary)
-			> Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
-		- std::vector<P> getProducts(std::vector<Particle>& group, const n1dict& dictionary)
-			> Given a particular particle group, return the antiparticles of products of the interaction from a dictionary
-			> Antiparticles are returned ready for use as external vertices in the next subdiagram
-		- listofproducts getNewExterns(pairedgrouping& pair,const n1dict& nto1)
-			> Given a 'pairedgrouping' and a n->1 interaction dictionary, return the products expected from the implied interaction
+/*Interactions.cpp : code to define interactions and the member functions of class Vertex
+*	Vertex class: member function definitions
+*		- Vertex::addLegs
+*			> Add a point to the vertex if we can and return true if this was successful
+*	Function definitions
+*		- vec2multiset
+*			> Given a vector of particles, return a multiset of particlenames
+*		- isGroupingValid
+*			> Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
+*		- getProducts
+*			> Given a particular particle group, return the antiparticles of products of the interaction from a dictionary
+*			> Antiparticles are returned ready for use as external vertices in the next subdiagram
+*		- getNewExterns
+*			> Given a 'pairedgrouping' and a n->1 interaction dictionary, return the products expected from the implied interaction
 */
 
 #include "Interactions.h"

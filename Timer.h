@@ -1,3 +1,5 @@
+//Timer.h : implement a basic container for std::chrono features
+
 #pragma once
 
 #include <chrono>

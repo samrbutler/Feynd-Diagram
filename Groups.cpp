@@ -1,17 +1,16 @@
-/*Groups.cpp :
-	Operator overloads
-		- bool operator==(const grouping& part1, const grouping& part2)
-			> allow groupings to be equated
-	Function definitions
-		- listofpairedgroupings getSubsets(std::vector<Particle>& input)
-			> given a list of particles, return a list of all possible subsets
-				and their complements as a 'listofpairedgroupings'
-			> generating function: returns by value
-		- listofpairedgroupings getGroupings(pairedgrouping& pairup)
-			> given a partially completed 'pairedgrouping', return all possible
-				completions of the grouping without duplicates
-			> recursive function
-			> generating function: returns by value
+/*Groups.cpp : code to group up free particles in diagrams
+*	Operator overloads
+*		- operator== (grouping)
+*	Function definitions
+*		- getSubsets
+*			> given a list of particles, return a list of all possible subsets
+*				and their complements as a 'listofpairedgroupings'
+*			> generating function: returns by value
+*		- getGroupings
+*			> given a partially completed 'pairedgrouping', return all possible
+*				completions of the grouping without duplicates
+*			> recursive function
+*			> generating function: returns by value
 */
 
 #include "Groups.h"

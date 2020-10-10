@@ -1,16 +1,16 @@
-/*Particles.cpp :
-	Static class member variable initialisation
-		- Initialise the unique point ID counter
-	Operator overloads
-		- std::ostream& operator<< (std::ostream& out, const P part)
-			> Allow for output of ParticleTypes to std::cout
-		- bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2)
-			> Compare particle vectors by their first elements
-		- bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>& part2)
-			> Compare particle vectors for inequality
-	Function definitions
-		- P getAntiParticle(const P part)
-			> Given a particle, return the name of its antiparticle
+/*Particles.cpp : Code relevant to the Particle class and for manipulating instances
+*	Static class member variable initialisation
+*		- Initialise the unique point ID counter
+*	Operator overloads
+*		- operator<< (P)
+*			> Allow for output of ParticleTypes to std::cout
+*		- operator< (std::vector<Particle>)
+*			> Compare particle vectors by their first elements
+*		- operator!= (std::vector<Particle>)
+*			> Compare particle vectors for inequality
+*	Function definitions
+*		- getAntiParticle
+*			> Given a particle, return the name of its antiparticle
 */
 
 #include "Particles.h"

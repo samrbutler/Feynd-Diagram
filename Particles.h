@@ -1,14 +1,14 @@
-/*Groups.h :
-	Classes
-		- Point
-			> A point container class
-		- Particle (inherits Point)
-			> Extends the point class to add functionality for particles
-	Function declarations
-		- operator<<
-		- operator<
-		- operator!=
-		- getAntiParticle
+/*Particles.h :
+*	Classes
+*		- Point
+*			> A point container class
+*		- Particle (inherits Point)
+*			> Extends the point class to add functionality for particles
+*	Function declarations
+*		- operator<< (P)
+*		- operator< (std::vector<Particle>)
+*		- operator!= (std::vector<Particle>)
+*		- getAntiParticle
 */
 
 #pragma once

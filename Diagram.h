@@ -1,12 +1,12 @@
 /*Diagram.h :
-	Classes
-		- Diagram
-			> Define a class for a diagram
-		- Process (inherits Diagram)
-			> Extend the diagram class to allow initial setup of a process
-	Function declarations
-		- operator<<
-		- connect
+*	Classes
+*		- Diagram
+*			> Define a class for a diagram
+*		- Process (inherits Diagram)
+*			> Extend the diagram class to allow initial setup of a process
+*	Function declarations
+*		- operator<<
+*		- connect
 */
 
 #pragma once
