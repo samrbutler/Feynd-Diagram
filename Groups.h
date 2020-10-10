@@ -33,5 +33,5 @@ using listofpairedgroupings = std::vector<pairedgrouping>;
 
 bool operator==(const grouping& part1, const grouping& part2);
 
-listofpairedgroupings getSubsets(std::vector<Particle>& input);
-listofpairedgroupings getGroupings(pairedgrouping& pairup);
+listofpairedgroupings getSubsets(const std::vector<Particle>& input);
+listofpairedgroupings getGroupings(const pairedgrouping& pairup);

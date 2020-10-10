@@ -24,7 +24,7 @@ n1dict generateDictionary(const n0dict& inters) {
     n1dict nto1s{};
 
     //Loop over all the interactions via iterators
-    for (auto interaction{ inters.begin() }; interaction != inters.end(); ++interaction) {
+    for (n0dict::const_iterator interaction{ inters.begin() }; interaction != inters.end(); ++interaction) {
 
         //Aim: Identify each element in turn and make it the product of an n-to-1 interaction
 
@@ -32,16 +32,16 @@ n1dict generateDictionary(const n0dict& inters) {
         for (int i{}; i < static_cast<int>(interaction->size()); ++i) {
 
             //Prepare a copy of the multiset...
-            auto lefthand = *interaction;
+            std::multiset<P> lefthand = *interaction;
 
             //...and store its location
-            auto blh{ lefthand.begin() };
+            std::multiset<P>::iterator blh{ lefthand.begin() };
 
             //Advance the pointer to the correct particle
             std::advance(blh, i);
 
             //Extract the product particle and store
-            auto righthand = *blh;
+            P righthand = *blh;
 
             //Remove this particle from the left hand side
             lefthand.erase(blh);

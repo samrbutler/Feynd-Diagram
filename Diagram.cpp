@@ -16,6 +16,9 @@
 		- std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nto1, bool debug = false)
 			> Given a diagram and interaction dictionaries, return a vector of all possible completed tree-level diagrams
 			> Set debug to true for verbose terminal output
+
+	TO DO:
+		- Add code in operator>> when propagator distinction is implemented
 */
 
 #include "Diagram.h"
@@ -29,24 +32,24 @@
 #include <vector>
 
 //Construct a diagram from a vector of particles and a single vertex
-Diagram::Diagram(std::vector<Particle>& externs, Vertex vertex) {
+Diagram::Diagram(const std::vector<Particle>& externs,const Vertex& vertex) {
 	m_vertices.push_back(vertex);
 	m_externs = externs;
 }
 
 //Add a vector of vertices to the diagram
-void Diagram::addVertices(std::vector<Vertex> verts) {
+void Diagram::addVertices(const std::vector<Vertex>& verts) {
 	m_vertices.insert(m_vertices.end(), verts.begin(), verts.end());
 }
 
 //Return true if the external particles of the current diagram can form a vertex with two active particles
-bool Diagram::isVertex(const n0dict& dictionary)
+bool Diagram::isVertex(const n0dict& dictionary) const
 {
 	//If we only have 1 particle this isn't a vertex
 	if (static_cast<int>(m_externs.size()) == 1) return false;
 	else {
 		//Count the number of active particles: return early if this is less than 2
-		if (std::count_if(m_externs.begin(), m_externs.end(), [](Particle& p) -> bool {return p.isActive(); }) < 2) return false;
+		if (std::count_if(m_externs.begin(), m_externs.end(), [](const Particle& p) -> bool {return p.isActive(); }) < 2) return false;
 
 		//Check if we have 2 particles
 		if (static_cast<int>(m_externs.size()) == 2) {
@@ -59,10 +62,10 @@ bool Diagram::isVertex(const n0dict& dictionary)
 		//We now have more than 2 particles
 		else {
 			//Get the types of the particles
-			auto types{ vec2multiset(m_externs) };
+			std::multiset<P> types{ vec2multiset(m_externs) };
 
 			//Search for this interaction in the n->0 dictionary
-			for (auto interaction : dictionary) {
+			for (const std::multiset<P>& interaction : dictionary) {
 				//If we find it, this is a vertex
 				if (interaction == types) return true;
 			}
@@ -74,7 +77,7 @@ bool Diagram::isVertex(const n0dict& dictionary)
 }
 
 //Create a process from incoming and outgoing particle names
-Process::Process(std::vector<P> incoming, std::vector<P> outgoing) {
+Process::Process(const std::vector<P> incoming, const std::vector<P> outgoing) {
 	for (P part : incoming) {
 		//Construct an active particle and add it to the list
 		m_externs.push_back(Particle(part, true));
@@ -91,12 +94,13 @@ Process::Process(std::vector<P> incoming, std::vector<P> outgoing) {
 //Allow for output of a diagram to std::cout
 std::ostream& operator<< (std::ostream& out, const Diagram& diag) {
 	//Loop through the vertices
-	for (auto vertex : diag.getVertices()) {
+	for (const Vertex& vertex : diag.getVertices()) {
 		//Get particle information
-		auto legids{ vertex.getConnectionIDs() };
-		auto legtypes{ vertex.getConnectionTypes() };
+		std::vector<int> legids{ vertex.getConnectionIDs() };
+		std::vector<P> legtypes{ vertex.getConnectionTypes() };
 
-		//If there are two particles at the vertex, this is a propagator, so display the propagator type and the connected point IDs
+		//If there are two particles at the vertex and it's a particle/antiparticle pair, this is a propagator...
+		//...so display the propagator type and the connected point IDs
 		if (legids.size() == 2) {
 			std::cout << "\tPropagator | ";
 			std::cout << legtypes[0] << " (" << legids[0] << ","<<legids[1]<<"), ";
@@ -118,12 +122,12 @@ std::ostream& operator<< (std::ostream& out, const Diagram& diag) {
 //Given a diagram and interaction dictionaries, return a vector of all possible completed tree-level diagrams
 std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nto1, bool debug) {
 	//Store the current external vertices of this diagram
-	auto externs{ diag.getExterns() };
+	const std::vector<Particle>& externs{ diag.getExterns() };
 
 	//DEBUG: Print details about all the current external particles
 	if (debug) {
 		std::cout << "Current External Particles\n";
-		for (auto part : externs) {
+		for (const Particle& part : externs) {
 			std::cout << part.getType() << " , " << part.isActive() << " | ";
 		}
 		std::cout << '\n';
@@ -137,8 +141,8 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 	if (diag.isVertex(nto0)) {
 		//Collect all particle information ready to create a vertex
 		std::vector<int> idstoadd;
-		std::vector<P> typestoadd{};
-		for (Particle part : externs) {
+		std::vector<P> typestoadd;
+		for (const Particle& part : externs) {
 			idstoadd.push_back(part.getID());
 			typestoadd.push_back(part.getType());
 		}
@@ -177,14 +181,14 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 		//DEBUG : Display all groupings
 		if (debug) {
 			std::cout << "FULL GROUPING LIST\n";
-			for (auto grouping : groupinglist) {
-				for (auto group : grouping.first) {
-					for (auto part : group) {
+			for (const pairedgrouping& pg : groupinglist) {
+				for (const std::vector<Particle>& group : pg.first) {
+					for (const Particle& part : group) {
 						std::cout << part.getType() << ',';
 					}
 					std::cout << '|';
 				}
-				for (auto part : grouping.second) {
+				for (const Particle& part : pg.second) {
 					std::cout << part.getType() << ',';
 				}
 				std::cout << '\n';
@@ -193,28 +197,28 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 		}
 
 		//For each grouping in the list...
-		for (pairedgrouping grouping : groupinglist) {
+		for (pairedgrouping grp : groupinglist) {
 			//...get a list of possible new products for this group
-			listofproducts prodlist{ getNewExterns(grouping, nto1) };
+			listofproducts prodlist{ getNewExterns(grp, nto1) };
 
 			//DEBUG : Display the current grouping and what it will reduce to
 			if (debug) {
 				std::cout << "Current Grouping: \n\t";
-				for (auto group : grouping.first) {
-					for (auto part : group) {
+				for (const std::vector<Particle>& group : grp.first) {
+					for (const Particle& part : group) {
 						std::cout << part.getType() << ',';
 					}
 					std::cout << "| ";
 				}
 				std::cout << " |X| ";
-				for (auto part : grouping.second) {
+				for (const Particle& part : grp.second) {
 					std::cout << part.getType() << ',';
 				}
 				std::cout << '\n';
 				std::cout << "Product lists: \n";
-				for (auto combo : prodlist) {
+				for (const std::vector<P>& combo : prodlist) {
 					std::cout << '\t';
-					for (auto group : combo) {
+					for (const P group : combo) {
 						std::cout << group << "| ";
 					}
 					std::cout << '\n';
@@ -240,13 +244,13 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 				std::vector<Vertex> verticestoadd;
 
 				//Go through each of the groups that have been formed
-				for (int i{}; i < static_cast<int>(grouping.first.size()); ++i) {
+				for (int i{}; i < static_cast<int>(grp.first.size()); ++i) {
 					//Set up the new particle information containers for vertex production
 					std::vector<int> idstoadd{};
 					std::vector<P> typestoadd{};
 
 					//Add the old particles that have "merged"
-					for (auto oldpart : grouping.first[i]) {
+					for (const Particle& oldpart : grp.first[i]) {
 						idstoadd.push_back(oldpart.getID());
 						typestoadd.push_back(oldpart.getType());
 					}
@@ -270,7 +274,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 				}
 
 				//Now add the previous external particles to the new container, setting them inactive first
-				for (auto ungrouped : grouping.second) {
+				for (Particle& ungrouped : grp.second) {
 					ungrouped.setActive(false);
 					particlestoadd.push_back(ungrouped);
 				}
@@ -301,7 +305,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 
 				//If we got diagrams back, for each subdiagram create a new diagram which combines the vertices... 
 				//...and external particles of the current diagram with the vertices of the subdiagram
-				for (auto sd : connectedsds) {
+				for (Diagram& sd : connectedsds) {
 					Diagram newdiag(diag);
 					newdiag.addVertices(verticestoadd);
 					newdiag.addVertices(sd.getVertices());

@@ -38,7 +38,7 @@ bool operator==(const grouping& part1, const grouping& part2) {
 }
 
 //Given a list of particles, return a list of all possible subsets and their complements as a 'listofpairedgroupings'
-listofpairedgroupings getSubsets(std::vector<Particle>& input) {
+listofpairedgroupings getSubsets(const std::vector<Particle>& input) {
 	//Set up the container
 	listofpairedgroupings pairings{};
 
@@ -64,7 +64,7 @@ listofpairedgroupings getSubsets(std::vector<Particle>& input) {
 			toadd.push_back(subset);
 
 			//Pair up the subset and its complement
-			auto pairup{ std::make_pair(toadd, notsubset) };
+			pairedgrouping pairup{ std::make_pair(toadd, notsubset) };
 
 			//Add it to the return vector
 			pairings.push_back(pairup);
@@ -75,23 +75,23 @@ listofpairedgroupings getSubsets(std::vector<Particle>& input) {
 }
 
 //Given a partially completed 'pairedgrouping', return all possible completions of the grouping without duplicates
-listofpairedgroupings getGroupings(pairedgrouping& pairup) {
+listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
 	//Create the empty vector of groupings
 	listofpairedgroupings list{};
 
 	//Extract the current vector of groups
-	auto currentgroups{ pairup.first };
+	grouping currentgroups{ pairup.first };
 
 	//Add the current pairing to the list (i.e. we terminate pairing here)
 	list.push_back(pairup);
 
 	//Get the vector of ungrouped elements
-	auto notPaired{ pairup.second };
+	const std::vector<Particle>& notPaired{ pairup.second };
 
 	//If we can form another group, do it  
 	if (static_cast<int>(notPaired.size()) > 1) {
 		//Go through each of the new subsets
-		for (auto pairup : getSubsets(notPaired)) {
+		for (const pairedgrouping& pairup : getSubsets(notPaired)) {
 			//Initiate recursion to get groupings from unpaired elements
 			listofpairedgroupings newgroupings{ getGroupings(pairup) };
 
@@ -130,7 +130,7 @@ listofpairedgroupings getGroupings(pairedgrouping& pairup) {
 		bool isfound{ false };
 
 		//Loop over the groupings we've already found, and set isfound to true if there's a match
-		for (auto dupe : nodupes) {
+		for (const pairedgrouping& dupe : nodupes) {
 			if (dupe.first == list[i].first) isfound = true;
 		}
 

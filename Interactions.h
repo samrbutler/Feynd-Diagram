@@ -32,6 +32,10 @@ class Vertex : public Point {
 
 	//Number of legs
 	int m_numlegs;
+	//Vertex type (for future use)
+	int m_vertextype;
+	//Define if this vertex is a propagator (for future use)
+	bool m_isProp;
 	//IDs of points connected to the vertex
 	std::vector<int> m_connection_ids;
 	//Particle type of points connected to the vertex
@@ -45,19 +49,23 @@ public:
 	//Return the list of point types that are connected to this vertex
 	const std::vector<P>& getConnectionTypes() const { return m_connection_types; }
 
+	//Return the vertex type
+	const int getVertexType() const { return m_vertextype; }
+
 	//You can't create an empty vertex
 	Vertex() = delete;
 
 	//Construct from a full list of legs
-	Vertex(std::vector<int>& ids, std::vector<P> types) : m_numlegs{ static_cast<int>(ids.size()) }, m_connection_ids{ ids }, m_connection_types{ types } {}
+	Vertex(const std::vector<int>& ids, const std::vector<P>& types, const bool isProp = false) : m_numlegs{ static_cast<int>(ids.size()) },
+		m_vertextype{}, m_isProp{ isProp }, m_connection_ids{ ids }, m_connection_types{ types } {}
 
 	//Construct with a cutoff for the number of vertices
-	Vertex(int legs) : m_numlegs{ legs }, m_connection_ids{}, m_connection_types{} {}
+	Vertex(int legs) : m_numlegs{ legs }, m_vertextype{}, m_isProp{}, m_connection_ids{}, m_connection_types{} {}
 
 	bool addLegs(const std::vector<int>& idstoadd, const std::vector<P>& typestoadd);
 };
 
 std::multiset<P> vec2multiset(const std::vector<Particle>& group);
-bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary);
-std::vector<P> getProducts(std::vector<Particle>& group, const n1dict& dictionary);
-listofproducts getNewExterns(pairedgrouping& pair, const n1dict& nto1);
+bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary);
+std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dictionary);
+listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1);

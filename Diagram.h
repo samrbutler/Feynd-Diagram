@@ -23,7 +23,7 @@
 //Define a class for a diagram
 class Diagram {
 
-protected:	
+protected:
 
 	//External particles
 	std::vector<Particle> m_externs;
@@ -41,17 +41,17 @@ public:
 	Diagram() : m_externs{}, m_vertices{} {};
 
 	//Construct a diagram from a vector of particles
-	Diagram(std::vector<Particle>& externs) : m_externs{ externs }, m_vertices{ } {}
+	Diagram(const std::vector<Particle>& externs) : m_externs{ externs }, m_vertices{ } {}
 
-	Diagram(std::vector<Particle>& externs, Vertex vertex);
+	Diagram(const std::vector<Particle>& externs, const Vertex& vertex);
 
 	//Add a vertex to the diagram
-	void addVertex(Vertex vert) { m_vertices.push_back(vert); }
-	
-	void addVertices(std::vector<Vertex> verts);
+	void addVertex(const Vertex& vert) { m_vertices.push_back(vert); }
 
-	bool isVertex(const n0dict& dictionary);
-	
+	void addVertices(const std::vector<Vertex>& verts);
+
+	bool isVertex(const n0dict& dictionary) const;
+
 };
 
 //Extend the diagram class to allow initial setup of a process
@@ -65,9 +65,9 @@ class Process : public Diagram {
 public:
 
 	//Create a process from incoming and outgoing particle names
-	Process(std::vector<P> incoming, std::vector<P> outgoing);
+	Process(const std::vector<P> incoming, const std::vector<P> outgoing);
 };
 
 std::ostream& operator<<(std::ostream& out, const Diagram& diag);
 
-std::vector<Diagram> connect(Diagram& diag,const n0dict& nto0 = Model::Interactions, const n1dict& nto1 = Model::NTO1,bool debug = false);
+std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0 = Model::Interactions, const n1dict& nto1 = Model::NTO1, const bool debug = false);

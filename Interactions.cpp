@@ -48,7 +48,7 @@ std::multiset<P> vec2multiset(const std::vector<Particle>& group) {
     std::multiset<P> groupnames{};
 
     //Add the type of every element in the group to the multiset
-    for (auto element : group) {
+    for (const Particle& element : group) {
         groupnames.insert(element.getType());
     }
 
@@ -58,7 +58,7 @@ std::multiset<P> vec2multiset(const std::vector<Particle>& group) {
 
 
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
-bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary) {
+bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary) {
     //Get the grouplist
     grouping grouplist{ pair.first };
 
@@ -66,18 +66,18 @@ bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary) {
     if (static_cast<int>(grouplist.size()) == 0) return false;
 
     //Loop over all groups in the grouplist: if any group is invalid the whole grouping is invalid
-    for (auto group : grouplist) {
+    for (const std::vector<Particle>& group : grouplist) {
         //Count the number of active particles: if this is less than 1, the group isn't valid
-        if (std::count_if(group.begin(), group.end(), [](Particle& p) -> bool {return p.isActive(); }) < 1) return false;
+        if (std::count_if(group.begin(), group.end(), [](const Particle& p) -> bool {return p.isActive(); }) < 1) return false;
 
         //Get a multiset of particle names in the current group
-        auto groupnames{ vec2multiset(group) };
+        const std::multiset<P> groupnames{ vec2multiset(group) };
 
         //Suppose the group isn't valid
         bool validgroup{ false };
 
         //Loop over all interactions in the dictionary
-        for (auto interaction : dictionary) {
+        for (const std::pair<std::multiset<P>,P>& interaction : dictionary) {
             //If the current group matches this interaction, the group is valid
             if (groupnames == interaction.first) {
                 validgroup = true;
@@ -91,18 +91,18 @@ bool isGroupingValid(pairedgrouping& pair, const n1dict& dictionary) {
 }
 
 //Given a particular particle group, return the antiparticles of products of the interaction from a dictionary
-std::vector<P> getProducts(std::vector<Particle>& group, const n1dict& dictionary) {
+std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dictionary) {
     //Empty return vector
     std::vector<P> vec;
 
     //Return an empty vector early if the number of active particles is less than 1
-    if (std::count_if(group.begin(), group.end(), [](Particle& p) -> bool {return p.isActive(); }) < 1) return vec;
+    if (std::count_if(group.begin(), group.end(), [](const Particle& p) -> bool {return p.isActive(); }) < 1) return vec;
 
     //Get the names of particles in the group
-    auto groupnames{vec2multiset(group)};
+    std::multiset<P> groupnames{vec2multiset(group)};
 
     //Loop over all interactions in the dictionary
-    for (auto interaction : dictionary) {
+    for (const std::pair<std::multiset<P>,P>& interaction : dictionary) {
         //Check if the multiset matches the current interaction
         if (groupnames == interaction.first) {
             //If it does, add its antiparticle to the product list
@@ -114,7 +114,7 @@ std::vector<P> getProducts(std::vector<Particle>& group, const n1dict& dictionar
 }
 
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return the products expected from the implied interaction
-listofproducts getNewExterns(pairedgrouping& pair,const n1dict& nto1) {
+listofproducts getNewExterns(const pairedgrouping& pair,const n1dict& nto1) {
     //Empty container
     listofproducts container;
 
@@ -124,14 +124,14 @@ listofproducts getNewExterns(pairedgrouping& pair,const n1dict& nto1) {
     }
     else {
         //Get the grouped elements
-        auto groups{ pair.first };
+        const grouping& groups{ pair.first };
 
         //Count how many groups there are
         int numgroups = static_cast<int>(groups.size());
 
         //Receive a list of possible products for each group
         std::vector<std::vector<P>> productlist;
-        for (auto group : groups) {
+        for (const std::vector<Particle>& group : groups) {
             productlist.push_back(getProducts(group, nto1));
         }
 
