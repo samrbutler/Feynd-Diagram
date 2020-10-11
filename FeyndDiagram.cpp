@@ -16,8 +16,8 @@
 
 int main()
 {
-	//TEST CODE
 
+	/*TEST CODE
 	Timer t;
 
 	//Set up a scattering process
@@ -32,4 +32,5 @@ int main()
 	for (size_t i{}; i < diagrams.size(); ++i) {
 		std::cout << "Diagram " << (i + 1) << ":\n" << diagrams[i];
 	}
+	*/
 }

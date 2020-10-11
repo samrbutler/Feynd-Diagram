@@ -1,5 +1,6 @@
 /*Interactions.cpp : code to define interactions and the member functions of class Vertex
 *	Vertex class: member function definitions
+*		- Vertex::Vertex (constructor from particle list)
 *		- Vertex::addLegs
 *			> Add a point to the vertex if we can and return true if this was successful
 *	Function definitions
@@ -25,6 +26,16 @@
 #include <iterator>
 #include <map>
 #include <set>
+
+Vertex::Vertex(const std::vector<Particle>& parts, const bool isProp) {
+	m_numlegs = static_cast<int>(parts.size());
+	m_vertextype = {};
+	m_isProp = isProp;
+	for (const Particle& part : parts) {
+		m_connection_ids.push_back(part.getID());
+		m_connection_types.push_back(part.getType());
+	}
+}
 
 //Add a point to the vertex if we can and return true if this was successful
 bool Vertex::addLegs(const std::vector<int>& idstoadd, const std::vector<P>& typestoadd) {

@@ -139,14 +139,6 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 
 	//Check to see if we can form a vertex
 	if (diag.isVertex(nto0)) {
-		//Collect all particle information ready to create a vertex
-		std::vector<int> idstoadd;
-		std::vector<P> typestoadd;
-		for (const Particle& part : externs) {
-			idstoadd.push_back(part.getID());
-			typestoadd.push_back(part.getType());
-		}
-
 		//DEBUG: Declare this to be a vertex
 		if (debug) {
 			std::cout << "IS VERTEX : DONE\n";
@@ -154,7 +146,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 		}
 
 		//Return a single diagram consisting of the external points and a vertex connecting them
-		return std::vector<Diagram> {Diagram(externs, Vertex(idstoadd, typestoadd))};
+		return std::vector<Diagram> {Diagram(externs, Vertex(externs))};
 	}
 
 	//If we don't have a vertex but there are now two or fewer particles left, this process has failed, so return an empty vector
@@ -246,31 +238,23 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 				//Go through each of the groups that have been formed
 				for (size_t i{}; i < grp.first.size(); ++i) {
 					//Set up the new particle information containers for vertex production
-					std::vector<int> idstoadd;
-					std::vector<P> typestoadd;
-
-					//Add the old particles that have "merged"
-					for (const Particle& oldpart : grp.first[i]) {
-						idstoadd.push_back(oldpart.getID());
-						typestoadd.push_back(oldpart.getType());
-					}
+					std::vector<Particle> vertexparts {grp.first[i]};
 
 					//Add the new (anti)particle to the external container and add it to the vertex
 					particlestoadd.push_back(Particle(prodlist[j][i], true));
-					idstoadd.push_back(particlestoadd.back().getID());
-					typestoadd.push_back(prodlist[j][i]);
+					vertexparts.push_back(particlestoadd.back());
 
 					//DEBUG: Print out the vertex that's going to be added
 					if (debug) {
 						std::cout << "Adding a vertex:\n\t";
-						for (size_t k{}; k < idstoadd.size(); ++k) {
-							std::cout << typestoadd[k] << ", " << idstoadd[k] << " | ";
+						for (size_t k{}; k < vertexparts.size(); ++k) {
+							std::cout << vertexparts[k].getType() << ", " << vertexparts[k].getID() << " | ";
 						}
 						std::cout << '\n';
 					}
 
 					//Create and add the vertex to the current diagram
-					verticestoadd.push_back(Vertex(idstoadd, typestoadd));
+					verticestoadd.push_back(Vertex(vertexparts));
 				}
 
 				//Now add the previous external particles to the new container, setting them inactive first

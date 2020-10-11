@@ -55,9 +55,8 @@ public:
 	//You can't create an empty vertex
 	Vertex() = delete;
 
-	//Construct from a full list of legs
-	Vertex(const std::vector<int>& ids, const std::vector<P>& types, const bool isProp = false) : m_numlegs{ static_cast<int>(ids.size()) },
-		m_vertextype{}, m_isProp{ isProp }, m_connection_ids{ ids }, m_connection_types{ types } {}
+	//Construct given a list of particles
+	Vertex(const std::vector<Particle>& parts, const bool isProp = false);
 
 	//Construct with a cutoff for the number of vertices
 	Vertex(int legs) : m_numlegs{ legs }, m_vertextype{}, m_isProp{}, m_connection_ids{}, m_connection_types{} {}

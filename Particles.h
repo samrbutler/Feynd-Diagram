@@ -5,6 +5,7 @@
 *		- Particle (inherits Point)
 *			> Extends the point class to add functionality for particles
 *	Function declarations
+*		- comparison operators for Point
 *		- operator<< (P)
 *		- operator< (std::vector<Particle>)
 *		- operator!= (std::vector<Particle>)
@@ -35,18 +36,22 @@ public:
 	//Default constructor to initialise the ID
 	Point() : m_id{ ++next_id } {}
 
+	//Virtual destructor
+	virtual ~Point() {}
+
 	//Return the ID of the point
 	int getID() const { return m_id; }
 
-	//Overload operator< to compare point IDs
-	bool operator<(const Point& point2) const { return (m_id < point2.getID()); }
-	//Overload operator> to compare point IDs
-	bool operator>(const Point& point2) const { return (m_id > point2.getID()); }
-	//Overload operator== to compare point IDs
-	bool operator==(const Point& point2) const { return (m_id == point2.getID()); }
-	//Overload operator!= to compare point IDs
-	bool operator!=(const Point& point2) const { return (m_id != point2.getID()); }
 };
+
+//Overload operator< to compare point IDs
+bool operator<(const Point& point1, const Point& point2);
+//Overload operator> to compare point IDs
+bool operator>(const Point& point1, const Point& point2);
+//Overload operator== to compare point IDs
+bool operator==(const Point& point1, const Point& point2);
+//Overload operator!= to compare point IDs
+bool operator!=(const Point& point1, const Point& point2);
 
 //Extends the point class to add functionality for particles
 class Particle : public Point {

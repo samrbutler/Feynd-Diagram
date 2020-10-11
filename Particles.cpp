@@ -2,6 +2,7 @@
 *	Static class member variable initialisation
 *		- Initialise the unique point ID counter
 *	Operator overloads
+*		- comparison operators for Point
 *		- operator<< (P)
 *			> Allow for output of ParticleTypes to std::cout
 *		- operator< (std::vector<Particle>)
@@ -22,6 +23,16 @@
 
 //Initialise the unique point ID counter
 int Point::next_id{ 0 };
+
+//Overload operator< to compare point IDs
+bool operator<(const Point& point1, const Point& point2) { return (point1.getID() < point2.getID()); }
+//Overload operator> to compare point IDs
+bool operator>(const Point& point1, const Point& point2) { return (point1.getID() > point2.getID()); }
+//Overload operator== to compare point IDs
+bool operator==(const Point& point1, const Point& point2) { return (point1.getID() == point2.getID()); }
+//Overload operator!= to compare point IDs
+bool operator!=(const Point& point1, const Point& point2) { return (point1.getID() != point2.getID()); }
+
 
 //Allow for output of ParticleTypes to std::cout
 std::ostream& operator<< (std::ostream& out, const P part) {
