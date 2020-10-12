@@ -66,8 +66,6 @@ std::multiset<P> vec2multiset(const std::vector<Particle>& group) {
 	return groupnames;
 }
 
-
-
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
 bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary) {
 	//Get the grouplist
@@ -92,6 +90,7 @@ bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary) {
 			//If the current group matches this interaction, the group is valid
 			if (groupnames == interaction.first) {
 				validgroup = true;
+				break;
 			}
 		}
 		if (!validgroup) return false;

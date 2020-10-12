@@ -37,7 +37,7 @@ bool operator==(const grouping& part1, const grouping& part2) {
 }
 
 //Given a list of particles, return a list of all possible subsets and their complements as a 'listofpairedgroupings'
-listofpairedgroupings getSubsets(const std::vector<Particle>& input) {
+listofpairedgroupings getSubsets(const std::vector<Particle>& input, const size_t min_size) {
 	//Set up the container
 	listofpairedgroupings pairings{};
 
@@ -57,7 +57,7 @@ listofpairedgroupings getSubsets(const std::vector<Particle>& input) {
 		}
 
 		//We don't care about the subset if it is size 1 or trivial
-		if (subset.size() >= 2) {
+		if (subset.size() >= min_size) {
 			//Create and add the subset to a vector of vectors
 			std::vector<std::vector<Particle>> toadd{};
 			toadd.push_back(subset);

@@ -79,5 +79,5 @@ namespace Model {
 loopdict getLoopDictionary(const n1dict& inters = Model::NTO1);
 
 namespace Model {
-	inline const loopdict LOOP{ getLoopDictionary() };
+	inline const loopdict LOOPDICT{ getLoopDictionary() };
 }
