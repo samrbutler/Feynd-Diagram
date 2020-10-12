@@ -16,13 +16,16 @@
 *			> define the antiparticles for every particle in the model
 *	Function declarations
 *		- getAntiParticle
-*		- generateDictionary
+*		- generateN1Dictionary
+*		- getLoopDictionary
 */
 
 #pragma once
 
+#include <algorithm>
 #include <iterator>
 #include <map>
+#include <string>
 #include <set>
 #include <tuple>
 #include <vector>
@@ -44,12 +47,17 @@ using P = Model::ParticleType;
 using n0dict = std::multiset<std::multiset<P>>;
 //A dictionary for n->1 interactions
 using n1dict = std::set<std::pair<std::multiset<P>, P>>;
+//A dictionary for n->m interactions
+using loopdict = std::set<std::pair<std::multiset<P>, std::multiset<P>>>;
 
 namespace Model {
 	//Define the n->0 dictionary
 	inline const n0dict Interactions{
 		{P::phi,P::psi,P::antipsi},
-		{P::chi,P::psi,P::antipsi}
+		{P::chi,P::psi,P::antipsi},
+		{P::phi,P::phi,P::phi,P::phi},
+		{P::chi,P::chi,P::chi,P::chi},
+		{P::phi,P::phi,P::chi,P::chi}
 	};
 
 	//The antiparticles for every particle in the model
@@ -62,8 +70,14 @@ namespace Model {
 }
 
 P getAntiParticle(const P part);
-n1dict generateDictionary(const n0dict & = Model::Interactions);
+n1dict generateN1Dictionary(const n0dict & = Model::Interactions);
 
 namespace Model {
-	inline const n1dict NTO1{ generateDictionary() };
+	inline const n1dict NTO1{ generateN1Dictionary() };
+}
+
+loopdict getLoopDictionary(const n1dict& inters = Model::NTO1);
+
+namespace Model {
+	inline const loopdict LOOP{ getLoopDictionary() };
 }

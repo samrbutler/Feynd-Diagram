@@ -5,12 +5,19 @@
 
 #include "Loops.h"
 
-std::vector<LoopVertex> getLoopTopologies(const std::vector<P>& legs,const int num_loops)
+#include "Diagram.h"
+#include "Model.h"
+#include "Interactions.h"
+
+
+
+
+
+std::vector<LoopVertex> getLoopTopologies(const std::vector<Particle>& legs,const int num_loops)
 {
-	std::vector<std::vector<P>> listofgroupings;
+	listofpairedgroupings subsets{ getSubsets(legs) };
 
 	/*	TO-DO:
-	*		> convert getGroupings and subsequent functions to a template enabling use with enum class P
 	*		> get all the groupings of external vertices
 	*		> extend code to generate m->n dictionaries for all (m+n)<max_{vertices} (num_legs)
 	*		> go through the dictionaries and get a new list of particles

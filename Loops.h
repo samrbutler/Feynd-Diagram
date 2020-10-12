@@ -27,4 +27,4 @@ public:
 		: m_externs{ externs }, m_interns{ internals } {}
 };
 
-std::vector<LoopVertex> getLoopTopologies(const std::vector<P>& legs, const int num_loops);
+std::vector<LoopVertex> getLoopTopologies(const std::vector<Particle>& legs, const int num_loops);
