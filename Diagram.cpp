@@ -1,6 +1,6 @@
 /*Diagram.cpp :
 *	TO DO:
-*		- Add code in operator>> when propagator distinction is implemented
+*		- When we have the ability to do so, modify isVertex to search for loop topologies as well
 */
 
 #include "Diagram.h"
