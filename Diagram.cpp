@@ -103,6 +103,25 @@ std::ostream& operator<< (std::ostream& out, const Diagram& diag) {
 
 //Given a diagram and interaction dictionaries, return a vector of all possible completed tree-level diagrams
 std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nto1, bool debug) {
+
+	/* ALGORITHM
+	*	> Check if the external particles can connect directly into a vertex with at least two active particles
+	*		> If they can, add the vertex and return the completed diagram
+	*	> Check if we have two or fewer particles left without being able to connect them
+	*		> If we do, the diagram has not connected, so return an empty vector
+	*	> Otherwise, get all possible groupings of the external particles
+	*		> For each grouping, get all possible products
+	*			> If there are no products, skip this grouping
+	*			> If each group does not include at least one active particle, skip this grouping
+	*			> Go through all possible products and get the new external particles.
+					> Set these new particles active, the other particles passive and make a subdiagram
+	*				> Use recursion to connect the subdiagram
+	*					> If the subdiagram returned connections, combine the subdiagram into the current diagram and add it to the list
+	*					> If the subdiagram fails to connect, go to the next product
+	*			> If all products failed to produce a connected diagram, go to the next grouping
+	*		> If all groupings failed to connect, the diagram has failed to connect, so return an empty vector
+	*/
+
 	//Store the current external vertices of this diagram
 	const std::vector<Particle>& externs{ diag.getExterns() };
 

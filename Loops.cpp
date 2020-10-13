@@ -108,15 +108,14 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 std::vector<Diagram> getLoopTopologies(const std::vector<Particle>& legs, const int num_loops) {
 
 	std::vector<Diagram> list_of_diagrams;
-
-
+	
 	/* ALGORITHM
 	*	> Check if this is a loopy vertex: if it is, add this to the possibilities
 	*	> Go through all subsets of the legs
 	*		> For each subset, go through all possible products which could lead to at least one extra loop
 	*			> For each product, work out how many loops it will introduce. Initiate a recursion
+	*			> At tree level, we insist that the only possible connection is a single vertex to avoid duplication further down the line
 	*	> Bring everything back together
-	*
 	*/
 
 	//Get all subsets of the legs of minimum size 1
