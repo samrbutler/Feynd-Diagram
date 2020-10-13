@@ -44,8 +44,5 @@ int main()
 		std::cout << "}\n";
 	}
 
-	std::cout << "Completed in " << t.elapsed() << " seconds.\n\n";
-
-	
-	//
+	std::cout << "\n\nCompleted in " << t.elapsed() << " seconds.\n\n";
 }
