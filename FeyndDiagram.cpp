@@ -1,6 +1,5 @@
 /*FeyndDiagram.cpp
-*	Function definitions
-*		- main
+* 
 */
 
 #include "FeyndDiagram.h"
@@ -8,6 +7,7 @@
 #include "Diagram.h"
 #include "Groups.h"
 #include "Interactions.h"
+#include "Loops.h"
 #include "Model.h"
 #include "Particles.h"
 #include "Timer.h"
@@ -17,20 +17,35 @@
 int main()
 {
 	
-	/*TEST CODE
+	//TEST CODE
 	Timer t;
 
-	//Set up a scattering process
-	Process proc({ P::psi, P::antipsi }, { P::psi, P::antipsi });
-
-	//Generate the diagrams, specify interactiosn and debug output explicitly
-	std::vector<Diagram> diagrams{ connect(proc, Model::Interactions, Model::NTO1, false) };
-
-	//Print all the diagrams
-	std::cout << "Found " << diagrams.size() << " diagrams in " << t.elapsed() << " seconds:\n\n";
-
-	for (size_t i{}; i < diagrams.size(); ++i) {
-		std::cout << "Diagram " << (i + 1) << ":\n" << diagrams[i];
+	std::vector<LoopyVertex> output{ getLoopyVertices(2) };
+	for (const LoopyVertex& lv : output) {
+		auto extern_in = lv.external_particles_in;
+		auto extern_out = lv.external_particles_out;
+		auto interc = lv.internal_connections;
+		std::cout << "{ ";
+		for (const P& el : extern_in) {
+			std::cout << el << ' ';
+		}
+		std::cout << ", ";
+		for (const P& el : extern_out) {
+			std::cout << el << ' ';
+		}
+		std::cout << "} , { ";
+		for (const std::multiset<P>& el : interc) {
+			std::cout << "[ ";
+			for (const P& el2 : el) {
+				std::cout << el2 << ' ';
+			}
+			std::cout << "] ";
+		}
+		std::cout << "}\n";
 	}
-	*/
+
+	std::cout << "Completed in " << t.elapsed() << " seconds.\n\n";
+
+	
+	//
 }

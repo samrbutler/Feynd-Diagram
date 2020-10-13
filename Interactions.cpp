@@ -1,18 +1,4 @@
-/*Interactions.cpp : code to define interactions and the member functions of class Vertex
-*	Vertex class: member function definitions
-*		- Vertex::Vertex (constructor from particle list)
-*		- Vertex::addLegs
-*			> Add a point to the vertex if we can and return true if this was successful
-*	Function definitions
-*		- vec2multiset
-*			> Given a vector of particles, return a multiset of particlenames
-*		- isGroupingValid
-*			> Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
-*		- getProducts
-*			> Given a particular particle group, return the antiparticles of products of the interaction from a dictionary
-*			> Antiparticles are returned ready for use as external vertices in the next subdiagram
-*		- getNewExterns
-*			> Given a 'pairedgrouping' and a n->1 interaction dictionary, return the products expected from the implied interaction
+/*Interactions.cpp : 
 */
 
 #include "Interactions.h"

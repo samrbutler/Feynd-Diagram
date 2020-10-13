@@ -1,15 +1,5 @@
 /*Particles.h :
-*	Classes
-*		- Point
-*			> A point container class
-*		- Particle (inherits Point)
-*			> Extends the point class to add functionality for particles
-*	Function declarations
-*		- comparison operators for Point
-*		- operator<< (P)
-*		- operator< (std::vector<Particle>)
-*		- operator!= (std::vector<Particle>)
-*		- getAntiParticle
+*
 */
 
 #pragma once
@@ -17,7 +7,6 @@
 #include "Model.h"
 
 #include <algorithm>
-#include <iostream>
 #include <iterator>
 #include <map>
 #include <set>
@@ -71,6 +60,9 @@ public:
 	//Set the activity status of the particle
 	void setActive(const bool act) { m_active = act; }
 
+	//Toggle to the antiparticle
+	Particle toggleAntiPart();
+
 	//Delete the default constructor: you *must* define at least the particle type on generation
 	Particle() = delete;
 
@@ -78,6 +70,5 @@ public:
 	Particle(const P PType, const bool isAct = true) : m_ptype{ PType }, m_active{ isAct } {}
 };
 
-std::ostream& operator<<(std::ostream& out, const P part);
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
 bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>& part2);

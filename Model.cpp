@@ -1,22 +1,37 @@
-/*Model.cpp : Code relevant to the particle model in use
-*    Function definitions
-*        - getAntiParticle
-*            > Given a particle, return the name of its antiparticle
-*        - generateN1Dictionary
-*            > Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
-*		 - getLoopDictionary
-*			 > Given the n->1 dictionary, produce a list of all allowable n->m interactions where m>2
+/*Model.cpp :
+* 
 */
 
 #include "Model.h"
 
 #include <algorithm>
 #include <iterator>
+#include <iostream>
 #include <map>
 #include <string>
 #include <set>
 #include <tuple>
 #include <vector>
+
+//Allow for output of ParticleTypes to std::cout
+std::ostream& operator<< (std::ostream& out, const P part) {
+	//Switch based on the particle type
+	switch (part) {
+	case P::phi:
+		out << "Phi";
+		break;
+	case P::chi:
+		out << "Chi";
+		break;
+	case P::psi:
+		out << "Psi";
+		break;
+	case P::antipsi:
+		out << "Antipsi";
+		break;
+	}
+	return out;
+}
 
 //Given a particle, return the name of its antiparticle
 P getAntiParticle(const P part) { return Model::AntiParticleDict.at(part); }
@@ -62,6 +77,7 @@ n1dict generateN1Dictionary(const n0dict& inters) {
 	return nto1s;
 }
 
+//Given the n->1 dictionary, return all possible l->m interactions where m>2
 loopdict getLoopDictionary(const n1dict& inters) {
 
 	//Create empty container

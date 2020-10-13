@@ -1,12 +1,5 @@
 /*Diagram.h :
-*	Classes
-*		- Diagram
-*			> Define a class for a diagram
-*		- Process (inherits Diagram)
-*			> Extend the diagram class to allow initial setup of a process
-*	Function declarations
-*		- operator<<
-*		- connect
+*
 */
 
 #pragma once
@@ -38,7 +31,7 @@ public:
 	const std::vector<Vertex>& getVertices() const { return m_vertices; }
 
 	//Default constructor of any empty diagram
-	Diagram() : m_externs{}, m_vertices{} {};
+	Diagram() = default;
 
 	//Construct a diagram from a vector of particles
 	Diagram(const std::vector<Particle>& externs) : m_externs{ externs }, m_vertices{ } {}
@@ -50,7 +43,7 @@ public:
 
 	void addVertices(const std::vector<Vertex>& verts);
 
-	bool isVertex(const n0dict& dictionary) const;
+	bool isVertex(const n0dict& dictionary = Model::n_to_0) const;
 
 };
 
@@ -70,4 +63,4 @@ public:
 
 std::ostream& operator<<(std::ostream& out, const Diagram& diag);
 
-std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0 = Model::Interactions, const n1dict& nto1 = Model::NTO1, const bool debug = false);
+std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0 = Model::n_to_0, const n1dict& nto1 = Model::n_to_1, const bool debug = false);

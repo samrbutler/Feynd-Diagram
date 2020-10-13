@@ -1,28 +1,19 @@
-/*Model.h : DEFINE THE MODEL IN THIS FILE - OBJECTS MARKED *** NEED MODIFICATION
+/*Model.h : Define the following model-specific quantities:
 *	Enum classes
-*		- ParticleType ***
+*		- ParticleType
 *			> the names of particles appearing in the model
-*	Type aliases
-*		- n0dict
-*			> A dictionary for n->0 interactions
-*		- n1dict
-*			> A dictionary for n->1 interactions
-*		- P
-*			> an alias for the ParticleType enum class
-*	Global constants
-*		- Interactions ***
+*	Global (inline) constants
+*		- n_to_0
 *			> define all interactions of the model
-*		- AntiParticleDict ***
+*		- AntiParticleDict
 *			> define the antiparticles for every particle in the model
-*	Function declarations
-*		- getAntiParticle
-*		- generateN1Dictionary
-*		- getLoopDictionary
+*   Update also the overloaded operator>> for ParticleType in Model.cpp
 */
 
 #pragma once
 
 #include <algorithm>
+#include <iostream>
 #include <iterator>
 #include <map>
 #include <string>
@@ -52,32 +43,36 @@ using loopdict = std::set<std::pair<std::multiset<P>, std::multiset<P>>>;
 
 namespace Model {
 	//Define the n->0 dictionary
-	inline const n0dict Interactions{
+	inline const n0dict n_to_0{
+		{P::phi,P::phi,P::phi,P::phi},
+		{P::phi,P::phi,P::phi,P::phi,P::phi,P::phi},
+		{P::chi,P::chi,P::chi,P::chi},
+		{P::chi,P::chi,P::chi,P::chi,P::chi,P::chi},
 		{P::phi,P::psi,P::antipsi},
 		{P::chi,P::psi,P::antipsi},
-		{P::phi,P::phi,P::phi,P::phi},
-		{P::chi,P::chi,P::chi,P::chi},
 		{P::phi,P::phi,P::chi,P::chi}
 	};
 
 	//The antiparticles for every particle in the model
 	inline const std::map<P, P> AntiParticleDict{
 		{P::phi		,P::phi},
+		{P::chi		,P::chi},
 		{P::psi		,P::antipsi},
-		{P::antipsi	,P::psi},
-		{P::chi		,P::chi}
+		{P::antipsi	,P::psi}
 	};
 }
 
+
+std::ostream& operator<<(std::ostream& out, const P part);
 P getAntiParticle(const P part);
-n1dict generateN1Dictionary(const n0dict & = Model::Interactions);
+n1dict generateN1Dictionary(const n0dict & = Model::n_to_0);
 
 namespace Model {
-	inline const n1dict NTO1{ generateN1Dictionary() };
+	inline const n1dict n_to_1{ generateN1Dictionary() };
 }
 
-loopdict getLoopDictionary(const n1dict& inters = Model::NTO1);
+loopdict getLoopDictionary(const n1dict& inters = Model::n_to_1);
 
 namespace Model {
-	inline const loopdict LOOPDICT{ getLoopDictionary() };
+	inline const loopdict n_to_many{ getLoopDictionary() };
 }

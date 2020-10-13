@@ -1,15 +1,5 @@
 /*Interactions.h :
-*	Type aliases
-*		- listofproducts
-*			> A list of the products following the interactions prescribed by a grouping
-*	Classes
-*		- Vertex (inherits Point)
-*			> Extends the point class to add functionality for vertices
-*	Function declarations
-*		- vec2multiset
-*		- isGroupingValid
-*		- getProducts
-*		- getNewExterns
+*
 */
 
 #pragma once

@@ -1,22 +1,4 @@
-/*Diagram.cpp : implements the Diagram and Process classes and defines the tree
-*	Vertex member function definitions
-*		- Diagram::Diagram (from std::vector<Particle> and Vertex)
-*			> Construct a diagram from a vector of particles and a single vertex
-*		- Diagram::addVertices
-*			> Add a vector of vertices to the diagram
-*		- Diagram::isVertex
-*			> Return true if the external particles of the current diagram can form a vertex with two active particles
-*	Process member function definitions
-*		- Process::Process (from two std::vector<P>)
-*			> Create a process from incoming and outgoing particle names
-*	Operator overloads
-*		- operator<< (Diagram)
-*			> Allow for output of a diagram to std::cout
-*	Function definitions
-*		- connect
-*			> Given a diagram and interaction dictionaries, return a vector of all possible completed tree-level diagrams
-*			> Set debug to true for verbose terminal output
-*
+/*Diagram.cpp :
 *	TO DO:
 *		- Add code in operator>> when propagator distinction is implemented
 */
@@ -56,7 +38,7 @@ bool Diagram::isVertex(const n0dict& dictionary) const
 			//Check if this is a propagator (i.e. a particle and its antiparticle meet)
 			if (m_externs[0].getType() == getAntiParticle(m_externs[1].getType())) return true;
 
-			//If it isn't a propagator, this isn't a vertex
+			//If it isn't a propagator, this isn't a vertex (this will change in the future)
 			else return false;
 		}
 		//We now have more than 2 particles
