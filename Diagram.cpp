@@ -1,6 +1,6 @@
 /*Diagram.cpp :
 *	TO DO:
-*		- Add code in operator>> when propagator distinction is implemented
+*		- Add code to isVertex when we can distinguish from propagators and other valid 1->1 vertices
 */
 
 #include "Diagram.h"
