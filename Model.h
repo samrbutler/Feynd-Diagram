@@ -28,7 +28,6 @@ namespace Model {
 		phi,
 		psi,
 		antipsi,
-		chi
 	};
 }
 
@@ -45,18 +44,12 @@ namespace Model {
 	//Define the n->0 dictionary
 	inline const n0dict n_to_0{
 		{P::phi,P::phi,P::phi,P::phi},
-		{P::phi,P::phi,P::phi,P::phi,P::phi,P::phi},
-		{P::chi,P::chi,P::chi,P::chi},
-		{P::chi,P::chi,P::chi,P::chi,P::chi,P::chi},
-		{P::phi,P::psi,P::antipsi},
-		{P::chi,P::psi,P::antipsi},
-		{P::phi,P::phi,P::chi,P::chi}
+		{P::phi,P::psi,P::antipsi}
 	};
 
 	//The antiparticles for every particle in the model
 	inline const std::map<P, P> AntiParticleDict{
 		{P::phi		,P::phi},
-		{P::chi		,P::chi},
 		{P::psi		,P::antipsi},
 		{P::antipsi	,P::psi}
 	};

@@ -20,9 +20,9 @@ std::ostream& operator<< (std::ostream& out, const P part) {
 	case P::phi:
 		out << "Phi";
 		break;
-	case P::chi:
-		out << "Chi";
-		break;
+	//case P::chi:
+		//out << "Chi";
+		//break;
 	case P::psi:
 		out << "Psi";
 		break;
