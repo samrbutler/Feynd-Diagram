@@ -13,6 +13,7 @@
 #include "Timer.h"
 
 #include <iostream>
+#include <set>
 
 int main()
 {
@@ -20,8 +21,7 @@ int main()
 	//TEST CODE
 	Timer t;
 
-	std::vector<LoopyVertex> output{ getLoopyVertices(2) };
-	for (const LoopyVertex& lv : output) {
+	for (const LoopyVertex& lv : Model::loopy_vertices) {
 		auto extern_in = lv.external_particles_in;
 		auto extern_out = lv.external_particles_out;
 		auto interc = lv.internal_connections;

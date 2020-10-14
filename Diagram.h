@@ -38,6 +38,8 @@ public:
 
 	Diagram(const std::vector<Particle>& externs, const Vertex& vertex);
 
+	virtual ~Diagram() {}
+
 	//Add a vertex to the diagram
 	void addVertex(const Vertex& vert) { m_vertices.push_back(vert); }
 

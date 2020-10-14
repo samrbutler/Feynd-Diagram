@@ -73,6 +73,7 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 			//Since everything is OK, make the containers
 			std::multiset<P> extern_in;
 			std::multiset<P> extern_out;
+			std::multiset<P> interns;
 			std::multiset<std::multiset<P>> intern_conns;
 
 			//Add the inbound particles and the remaining outbound particles
@@ -85,12 +86,13 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 				std::multiset<P> legs;
 				for (const Particle& part : group) {
 					legs.insert(part.getType());
+					interns.insert(part.getType());
 				}
 				intern_conns.insert(legs);
 			}
 			//Check if we've already added this
 			bool isFound{ false };
-			LoopyVertex lvtoadd{ extern_in, extern_out, intern_conns, total_loops };
+			LoopyVertex lvtoadd{ extern_in, extern_out, interns, intern_conns, total_loops };
 			for (const LoopyVertex& lv : toReturn) {
 				if (lv == lvtoadd) {
 					isFound = true;
@@ -99,16 +101,16 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 			}
 			//If not, add it
 			if (!isFound)
-				toReturn.push_back(LoopyVertex{ extern_in, extern_out, intern_conns, total_loops });
+				toReturn.push_back(lvtoadd);
 		}
 	}
 	return toReturn;
 }
 
-std::vector<Diagram> getLoopTopologies(const std::vector<Particle>& legs, const int num_loops) {
+std::vector<LoopDiagram> connectLoop1PI(const Diagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs) {
 
-	std::vector<Diagram> list_of_diagrams;
-	
+	std::vector<LoopDiagram> list_of_diagrams;
+
 	/* ALGORITHM
 	*	> Check if this is a loopy vertex: if it is, add this to the possibilities
 	*	> Go through all subsets of the legs
@@ -118,8 +120,48 @@ std::vector<Diagram> getLoopTopologies(const std::vector<Particle>& legs, const 
 	*	> Bring everything back together
 	*/
 
+	std::multiset<P> externparttypes;
+	for (const Particle& part : diag.getExterns()) {
+		externparttypes.insert(part.getType());
+	}
+	for (const LoopyVertex& lv : loopyvs) {
+		if ((lv.external_particles_in == externparttypes) && (lv.external_particles_out == std::multiset<P>{})) {
+			LoopDiagram toadd(diag.getExterns());
+
+		}
+	}
+
+
 	//Get all subsets of the legs of minimum size 1
-	listofpairedgroupings subsets{ getSubsets(legs,1) };
+	//listofpairedgroupings subsets{ getSubsets(,1) };
+
 
 	return list_of_diagrams;
+}
+
+void LoopDiagram::addLoopyVertex(const LoopyVertex& lv, const std::vector<Particle> inbound_parts)
+{
+	//Generate the internal particles
+	std::vector<Particle> intparticles;
+	std::vector<Particle> allparticles{ inbound_parts };
+	for (const P& intpart : lv.internal_particles) {
+		intparticles.push_back(Particle(intpart));
+	}
+	allparticles.insert(allparticles.end(), intparticles.begin(), intparticles.end());
+	//Generate and add the central vertex
+	this->addVertex(Vertex(allparticles));
+	//Generate and add the internal vertices
+	for (const std::multiset<P>& group : lv.internal_connections) {
+		Vertex groupvertex(group.size());
+		for (const P& ptype : group) {
+			for (size_t i{}; i < intparticles.size(); ++i) {
+				if (intparticles[i].getType() == ptype) {
+					groupvertex.addLegs(std::vector<int>{intparticles[i].getID()}, std::vector<P> {ptype});
+					intparticles.erase(intparticles.begin() + i);
+					break;
+				}
+			}
+		}
+		this->addVertex(groupvertex);
+	}
 }

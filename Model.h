@@ -1,4 +1,4 @@
-/*Model.h : Define the following model-specific quantities:
+/*Model.h : Define the following model-specific quantities at compile-time:
 *	Enum classes
 *		- ParticleType
 *			> the names of particles appearing in the model
@@ -13,6 +13,7 @@
 #pragma once
 
 #include <algorithm>
+#include <array>
 #include <iostream>
 #include <iterator>
 #include <map>
@@ -29,6 +30,7 @@ namespace Model {
 		psi,
 		antipsi,
 	};
+	inline constexpr std::array<ParticleType, 3> all_ParticleTypes{ ParticleType::phi,ParticleType::psi,ParticleType::antipsi };
 }
 
 //Alias for the ParticleType enum class
@@ -46,6 +48,8 @@ namespace Model {
 		{P::phi,P::phi,P::phi,P::phi},
 		{P::phi,P::psi,P::antipsi}
 	};
+
+	inline constexpr int max_legs{ 4 };
 
 	//The antiparticles for every particle in the model
 	inline const std::map<P, P> AntiParticleDict{
