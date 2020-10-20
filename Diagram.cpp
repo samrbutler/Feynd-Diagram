@@ -75,6 +75,11 @@ Process::Process(const std::vector<P> incoming, const std::vector<P> outgoing) {
 
 //Allow for output of a diagram to std::cout
 std::ostream& operator<< (std::ostream& out, const Diagram& diag) {
+	std::cout << "\t Externals | ";
+	for (const Particle& part : diag.getExterns()) {
+		std::cout << part.getType() << " (" << part.getID() << "), ";
+	}
+	std::cout << '\n';
 	//Loop through the vertices
 	for (const Vertex& vertex : diag.getVertices()) {
 		//Get particle information
@@ -260,8 +265,7 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 
 				//Now add the previous external particles to the new container, setting them inactive first
 				for (Particle& ungrouped : grp.second) {
-					ungrouped.setActive(false);
-					particlestoadd.push_back(ungrouped);
+					particlestoadd.push_back(ungrouped.setActive(false));
 				}
 
 				//DEBUG: Display the number of new particles

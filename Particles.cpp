@@ -11,6 +11,11 @@
 //Initialise the unique point ID counter
 int Point::next_id{ 0 };
 
+Particle Particle::setActive(const bool act) {
+	m_active = act;
+	return *this;
+}
+
 Particle Particle::toggleAntiPart() {
 	m_ptype = getAntiParticle(m_ptype);
 	return *this;

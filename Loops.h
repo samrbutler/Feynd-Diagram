@@ -25,7 +25,9 @@ public:
 
 	LoopDiagram(const std::vector<Particle>& externs, const Vertex& vertex) : Diagram(externs, vertex) {}
 
-	void addLoopyVertex(const LoopyVertex& lv, const std::vector<Particle> inbound_parts);
+	//Override function connect to include connection with loops
+
+	void addLoopyVertex(const LoopyVertex& lv, const std::vector<Particle>& inbound_parts);
 };
 
 bool operator==(const LoopyVertex& lv1, const LoopyVertex& lv2);
@@ -36,4 +38,4 @@ namespace Model {
 	inline const std::vector<LoopyVertex> loopy_vertices{ getLoopyVertices(Model::max_legs) };
 }
 
-std::vector<LoopDiagram> connectLoop1PI(const Diagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices);
+std::vector<LoopDiagram> connectLoop1PI(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices);

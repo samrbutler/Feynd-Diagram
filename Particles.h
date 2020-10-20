@@ -49,6 +49,8 @@ class Particle : public Point {
 	P m_ptype;
 	//Is this particle marked as active for the algorithm
 	bool m_active;
+	//Which loops does this particle "belong" to
+	std::vector<int> m_loops;
 
 public:
 
@@ -58,7 +60,7 @@ public:
 	bool isActive() const { return m_active; }
 
 	//Set the activity status of the particle
-	void setActive(const bool act) { m_active = act; }
+	Particle setActive(const bool act);
 
 	//Toggle to the antiparticle
 	Particle toggleAntiPart();
@@ -67,7 +69,9 @@ public:
 	Particle() = delete;
 
 	//Construct given particle type and (optionally) activity
-	Particle(const P PType, const bool isAct = true) : m_ptype{ PType }, m_active{ isAct } {}
+	Particle(const P PType, const bool isAct = true) : m_ptype{ PType }, m_active{ isAct }, m_loops{} {}
+	//Construct given particle type, activity and the loop property
+	Particle(const P PType, const bool isAct, const std::vector<int> loops) : m_ptype{ PType }, m_active{ isAct }, m_loops{ loops } {}
 };
 
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);

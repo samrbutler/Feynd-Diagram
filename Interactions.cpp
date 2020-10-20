@@ -29,7 +29,7 @@ bool Vertex::addLegs(const std::vector<int>& idstoadd, const std::vector<P>& typ
 	if (m_numlegs - m_connection_ids.size() - idstoadd.size() < 0) return false;
 	else {
 		//Go through and add all ids and types to the vertex
-		for (size_t i{}; i < m_connection_ids.size(); ++i) {
+		for (size_t i{}; i < idstoadd.size(); ++i) {
 			m_connection_ids.push_back(idstoadd[i]);
 			m_connection_types.push_back(typestoadd[i]);
 		}
