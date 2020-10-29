@@ -14,6 +14,8 @@
 #include <set>
 #include <vector>
 
+int global_loop_counter{ 1 };
+
 void LoopDiagram::addLoopyVertex(const LoopyVertex& lv, const std::vector<Particle>& inbound_parts) {
 	//Generate the internal particles
 	std::vector<Particle> intparticles;
@@ -133,78 +135,154 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 	return toReturn;
 }
 
-//TO DO : Add arguments for non-model dictionaries
-std::vector<LoopDiagram> connectLoop1PI(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs) {
 
+
+newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loops, const std::vector<LoopyVertex>& loopyvs) {
+
+	//Set up container
+	newloopprofiles new_loops;
+	//Get inbound particle types
+	std::multiset<P> inbound_types{ vec2multiset(inbound) };
+
+	//Go through all the loopy vertices and add any matches
+	for (const LoopyVertex& lv : loopyvs) {
+		if (lv.external_particles_in == inbound_types
+			&& lv.num_loops + (static_cast<int>(lv.external_particles_out.size()) - 1) <= max_loops
+			&& lv.external_particles_out.size() >= 2
+			) {
+			new_loops.push_back(std::make_pair(lv.external_particles_out, lv));
+		}
+	}
+
+	//Go through all the normal vertices and add any matches
+	for (auto interaction : Model::n_to_many) {
+		if (interaction.first == inbound_types
+			&& static_cast<int>(interaction.second.size()) - 1 <= max_loops
+			) {
+			new_loops.push_back(std::make_pair(interaction.second, LV_null));
+		}
+	}
+
+	newloopvalues output;
+
+	//Go through each profile in the new list
+	for (auto profile : new_loops) {
+
+		//Get the number of spawned loops
+		int num_loops_spawned{ static_cast<int>(profile.first.size()) - 1 };
+		if (!profile.second.is_null) num_loops_spawned += profile.second.num_loops;
+		//Create the new particle container
+		std::vector<Particle> new_particles;
+		//Set up the rolling counter for loop momentum
+		int counter{ 1 };
+
+		//Go through each particle in the profile and add a new particle with the correct loop momenta
+		for (P part : profile.first) {
+			if (counter != num_loops_spawned + 1) {
+				new_particles.push_back(Particle(part, true, std::vector<int>{ global_loop_counter }));
+				++global_loop_counter;
+				++counter;
+			}
+			else {
+				//Create the loop_ids for the final output leg
+				std::vector<int> loop_ids(num_loops_spawned);
+				std::iota(loop_ids.begin(), loop_ids.end(), 1 - global_loop_counter);
+				new_particles.push_back(Particle(part, true, loop_ids));
+			}
+		}
+		//Add this to the possiblities
+		output.push_back(std::make_pair(new_particles, profile.second));
+
+	}
+
+	return output;
+}
+
+//TO DO : Add arguments for non-model dictionaries
+std::vector<LoopDiagram> connect1PI(const std::vector<Particle>& external_particles, const int num_loops, const std::vector<LoopyVertex>& loopyvs) {
+
+	int remaining_loops{ num_loops };
 	std::vector<LoopDiagram> list_of_diagrams;
 
-	/* ALGORITHM - we take a disconnected diagram with m external particles and return all *specific* 1PI completions at num_loops
-	*   > Declare (without loss of generality since this is 1PI) the first external particle to be the starting point of the first loop
-	*	> Go through all the 1->n vertices, spawning (n-1) new loops
-	*		- Add the appropriate loop momenta to a tracking vector (use + and - to indicate direction and a static id number to indicate value)
-	*		- Complete the resulting diagrams using an appropriate combination of (already found) 1PI loop diagrams of lesser loop order
+	/* ALGORITHM - we take a vector of m external particles and return all *specific* 1PI completions at num_loops
+	*			 - an X in the margin indicates the corresponding portion has been implemented
+	*X  > Declare (without loss of generality since this is 1PI) the first external particle to be the starting point of the first loop
+	*X  > Go through all the 1->n vertices, spawning (n-1) new loops
+	*X		- Add the appropriate loop momenta to a tracking vector (use + and - to indicate direction and a static id number to indicate value)
+	*		- Complete the resulting diagrams using an appropriate combination of 1PI loop diagrams of lesser loop order
 	*			= Convert n->0 loop topologies to n->1 topologies
-	*			= Use connection algorithm as before with additional topologies and allowances for 1->1 loopy interactions
+	*			= Use connection algorithm as before with additional loopy topologies and allowances for 1->1 loopy interactions
 	*			= Additional restriction is that legs carrying loop momenta cannot connect to external particles - when spawning a new
 	*			  leg from an n->1 interaction work out what momenta the new leg carries
 	*		- If connection fails, skip this vertex. Otherwise, add the result to the output list
-	*	> Now consider pairing the first external particle to all other inbound particles in turn and go through the 2->n vertices. Repeat the
-	*	  above subalgorithm with the new subgraphs
+	*X	> Now consider pairing the first external particle to all other inbound particles in turn and go through the 2->n vertices.
+			- Repeat the above subalgorithm with the new subgraphs
 	*	> Keep going until the first external particle is being grouped with
 	*		A) (m-1) of the remaining external particles (i.e. after introducing loops they have somewhere to connect to)
 	*	 or B) (max_int-2) others for max_int the largest number of particles that can simultaneously interact at a vertex
-	*	> If condition A was met, now check if this could be a loopy vertex (these have been generated in advance in generic form)
+	*X	> If condition A was met, now check if this could be a loopy vertex (these have been generated in advance in generic form)
 	*/
 
-	//Get the external particle types
-	std::multiset<P> externparttypes;
-	for (const Particle& part : diag.getExterns()) {
-		externparttypes.insert(part.getType());
-	}
-	//Go through each loopy vertex
-	for (const LoopyVertex& lv : loopyvs) {
-		//If the vertex produces external particles or adds the wrong number of loops, skip it
-		if ((lv.external_particles_out != std::multiset<P>{}) || (lv.num_loops != num_loops)) continue;
-		//Otherwise, check that the external particles match and add a diagram with the loopyvertex
-		if (lv.external_particles_in == externparttypes) {
-			LoopDiagram toadd(diag.getExterns());
-			toadd.addLoopyVertex(lv, diag.getExterns());
-			list_of_diagrams.push_back(toadd);
-		}
-	}
+	const int m{ static_cast<int>(external_particles.size()) };
 
-	//Get all subsets of the external particles of minimum size 1
-	listofpairedgroupings subsets{ getSubsets(diag.getExterns(),1) };
-	//Go through all subsets
-	for (const pairedgrouping& subsetcontainer : subsets) {
-		//Store the list of interacting particles
-		const std::vector<Particle>& subset{ subsetcontainer.first[0] };
-		//And store the list of non-interacting particles
-		const std::vector<Particle>& notsubset{ subsetcontainer.second };
-		//Get their types
-		std::multiset<P> subset_types{ vec2multiset(subset) };
-		
-		//Search for an appropriate interaction in the n_to_many dictionary
-		for (const std::pair<std::multiset<P>, std::multiset<P>>& interaction : Model::n_to_many) {
-			//Store the list of admitted particles
-			const std::multiset<P>& inbound{ interaction.first };
-			//If they don't match what we have, continue to the next interaction
-			if (inbound != subset_types) continue;
-			//Work out how many loops this will add
-			const int loops_added{ interaction.second.size() - 1 };
-			//If it adds too many, skip it
-			if (loops_added > num_loops) continue;
-			//Get the product particle types
-			const std::multiset<P>& outbound{ interaction.second };
-			//Collect the outbound particles
-			std::vector<Particle> outboundparticles{ notsubset };
-		}
+	const Particle& loop_start{ external_particles[0] };
+	const P start_type{ loop_start.getType() };
 
-		for (int loops_at_vertex{}; loops_at_vertex < num_loops - 1; ++loops_at_vertex) {
+	const std::vector<Particle> particles_available(external_particles.begin() + 1, external_particles.end());
+
+	newloopvalues new_particle_data{ spawnLoops(std::vector<Particle> {loop_start}, remaining_loops) };
+
+	/* CHECK THAT LOOPS ARE BEING SPAWNED CORRECTLY
+	for (auto loopvalue : new_particle_data) {
+		for (const Particle& part : loopvalue.first) {
+			std::cout << part.getType() << " (" << part.getID() << ") carrying momenta: ";
+			for (int loop : part.getLoops()) {
+				std::cout << loop << " , ";
+			}
+			std::cout << '\n';
 		}
-		
+		std::cout << "\n===============================\n";
+	}
+	std::cout << '\n';
+	*/
+
+	for (const std::pair<std::vector<Particle>, LoopyVertex>& new_set : new_particle_data) {
+		//Add the antiparticles of new_set to loop_start and connect to the (possibly loopy) vertex
+		//Add all the new particles to a subdiagram and call the loopy version of connect with the appropriate number of loops
 	}
 
+
+	/*
+	//Choose how many more particles are going to combine before spawning the loop
+	for (int i{ 1 }; i <= std::min(m - 1, Model::max_legs - 2); ++i) {
+		listofpairedgroupings choices{ getSubsets(particles_available, i,i) };
+		for (const pairedgrouping& pg : choices) {
+			for (const Particle& part : pg.first[0]) {
+				std::cout << part.getType() << " (" << part.getID() << ") , ";
+			}
+			std::cout << '\n';
+		}
+	}
+	*/
+
+	if (external_particles.size() <= Model::max_legs) {
+		//Get the external particle types
+		std::multiset<P> externparttypes;
+		for (const Particle& part : external_particles) {
+			externparttypes.insert(part.getType());
+		}
+		//Go through each loopy vertex
+		for (const LoopyVertex& lv : loopyvs) {
+			//If the vertex produces external particles or adds the wrong number of loops, skip it
+			if ((lv.external_particles_out != std::multiset<P>{}) || (lv.num_loops != num_loops)) continue;
+			//Otherwise, check that the external particles match and add a diagram with the loopyvertex
+			if (lv.external_particles_in == externparttypes) {
+				LoopDiagram toadd(external_particles);
+				toadd.addLoopyVertex(lv, external_particles);
+				list_of_diagrams.push_back(toadd);
+			}
+		}
+	}
 
 	return list_of_diagrams;
 }

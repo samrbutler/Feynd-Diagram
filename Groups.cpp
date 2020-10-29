@@ -61,6 +61,17 @@ listofpairedgroupings getSubsets(const std::vector<Particle>& input, const size_
 	return pairings;
 }
 
+listofpairedgroupings getSubsets(const std::vector<Particle>& input, const size_t min_size, const size_t max_size) {
+	listofpairedgroupings to_maximise{ getSubsets(input,min_size) };
+	size_t loc{};
+	while (loc < to_maximise.size()) {
+		size_t num_interactions{ to_maximise[loc].first[0].size() };
+		if (num_interactions > max_size) to_maximise.erase(to_maximise.begin() + loc);
+		else ++loc;
+	}
+	return to_maximise;
+}
+
 //Given a partially completed 'pairedgrouping', return all possible completions of the grouping without duplicates
 listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
 	//Create the empty vector of groupings

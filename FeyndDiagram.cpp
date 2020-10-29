@@ -17,19 +17,19 @@
 
 int main()
 {
-	
+
 	//TEST CODE
-	Timer t;
 
 	Particle p1{ P::phi };
 	Particle p2{ P::phi };
 
-	LoopDiagram diag(std::vector<Particle> {p1, p2});
+	Timer t;
+	auto returns{ connect1PI(std::vector<Particle> {p1, p2},1) };
+	auto time{ t.elapsed() };
 
-	auto returns{ connectLoop1PI(diag,1) };
 	for (LoopDiagram& ld : returns) {
-		std::cout << ld;
+		std::cout << ld << '\n';
 	}
 
-	std::cout << "\n\nCompleted in " << t.elapsed() << " seconds.\n\n";
+	std::cout << "\n\nCompleted in " << time << " seconds.\n\n";
 }

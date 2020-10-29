@@ -27,6 +27,7 @@
 namespace Model {
 	enum class ParticleType {
 		phi,
+		chi,
 		psi,
 		antipsi,
 	};
@@ -46,13 +47,15 @@ namespace Model {
 	//Define the n->0 dictionary
 	inline const n0dict n_to_0{
 		{P::phi,P::phi,P::phi,P::phi},
-		{P::phi,P::psi,P::antipsi}
+		{P::phi,P::psi,P::antipsi},
+		{P::phi,P::phi,P::chi,P::chi}
 	};
 
 	inline constexpr int max_legs{ 4 };
 
 	//The antiparticles for every particle in the model
 	inline const std::map<P, P> AntiParticleDict{
+		{P::chi		,P::chi},
 		{P::phi		,P::phi},
 		{P::psi		,P::antipsi},
 		{P::antipsi	,P::psi}

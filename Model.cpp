@@ -20,9 +20,9 @@ std::ostream& operator<< (std::ostream& out, const P part) {
 	case P::phi:
 		out << "Phi";
 		break;
-	//case P::chi:
-		//out << "Chi";
-		//break;
+	case P::chi:
+		out << "Chi";
+		break;
 	case P::psi:
 		out << "Psi";
 		break;
@@ -77,7 +77,7 @@ n1dict generateN1Dictionary(const n0dict& inters) {
 	return nto1s;
 }
 
-//Given the n->1 dictionary, return all possible l->m interactions where m>2
+//Given the n->1 dictionary, return all possible k->m interactions where m>2
 loopdict getLoopDictionary(const n1dict& inters) {
 
 	//Create empty container

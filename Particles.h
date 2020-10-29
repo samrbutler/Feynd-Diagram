@@ -58,6 +58,11 @@ public:
 	P getType() const { return m_ptype; }
 	//Return the activity status of the particle
 	bool isActive() const { return m_active; }
+	//Return the loop participation
+	std::vector<int> getLoops() const { return m_loops; }
+
+	//Add and subtract loop momenta from the current particle (a negative input removes the loop)
+	Particle addLoop(const std::vector<int> loop_ids);
 
 	//Set the activity status of the particle
 	Particle setActive(const bool act);

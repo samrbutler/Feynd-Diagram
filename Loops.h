@@ -16,7 +16,11 @@ struct LoopyVertex {
 	std::multiset<P> internal_particles;
 	std::multiset<std::multiset<P>> internal_connections;
 	int num_loops;
+
+	bool is_null{ false };
 };
+
+static inline const LoopyVertex LV_null{ {},{},{},{},0,true };
 
 class LoopDiagram : public Diagram {
 
@@ -38,4 +42,14 @@ namespace Model {
 	inline const std::vector<LoopyVertex> loopy_vertices{ getLoopyVertices(Model::max_legs) };
 }
 
-std::vector<LoopDiagram> connectLoop1PI(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices);
+/*List of tuples containing:
+*	std::multiset<P> - the new outbound particle types
+*	LoopyVertex   - pointer to the LoopyVertex responsible (or nullptr if not)
+*/
+
+using newloopprofiles = std::vector<std::pair<std::multiset<P>, LoopyVertex>>;
+using newloopvalues = std::vector<std::pair<std::vector<Particle>, LoopyVertex>>;
+
+newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices);
+
+std::vector<LoopDiagram> connect1PI(const std::vector<Particle>& external_particles, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices);

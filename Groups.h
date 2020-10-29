@@ -24,4 +24,5 @@ using listofpairedgroupings = std::vector<pairedgrouping>;
 bool operator==(const grouping& part1, const grouping& part2);
 
 listofpairedgroupings getSubsets(const std::vector<Particle>& input, const size_t min_size = 2);
+listofpairedgroupings getSubsets(const std::vector<Particle>& input, const size_t min_size, const size_t max_size);
 listofpairedgroupings getGroupings(const pairedgrouping& pairup);
