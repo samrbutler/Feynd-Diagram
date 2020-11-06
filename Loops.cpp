@@ -232,7 +232,7 @@ std::vector<LoopDiagram> connect1PI(const std::vector<Particle>& external_partic
 
 	newloopvalues new_particle_data{ spawnLoops(std::vector<Particle> {loop_start}, remaining_loops) };
 
-	/* CHECK THAT LOOPS ARE BEING SPAWNED CORRECTLY
+	//CHECK THAT LOOPS ARE BEING SPAWNED CORRECTLY
 	for (auto loopvalue : new_particle_data) {
 		for (const Particle& part : loopvalue.first) {
 			std::cout << part.getType() << " (" << part.getID() << ") carrying momenta: ";
@@ -244,11 +244,28 @@ std::vector<LoopDiagram> connect1PI(const std::vector<Particle>& external_partic
 		std::cout << "\n===============================\n";
 	}
 	std::cout << '\n';
-	*/
+	//
 
-	for (const std::pair<std::vector<Particle>, LoopyVertex>& new_set : new_particle_data) {
+	for (std::pair<std::vector<Particle>, LoopyVertex>& new_set : new_particle_data) {
 		//Add the antiparticles of new_set to loop_start and connect to the (possibly loopy) vertex
 		//Add all the new particles to a subdiagram and call the loopy version of connect with the appropriate number of loops
+		std::vector<Particle> new_vertex{ loop_start };
+		std::vector<Particle> new_externs{ particles_available };
+		for (Particle& p : new_set.first) {
+			new_vertex.push_back(p.toggleAntiPart());
+			p.toggleAntiPart();
+			new_externs.push_back(p);
+		}
+		/*
+		std::vector<LoopDiagram> subdiagrams{ connectFull(~new_externs~) };  <========== Still need to implement connectFull
+		for (LoopDiagram& ld : subdiagrams)
+		if (new_set.second.is_null) {
+			ld.addVertex(Vertex(new_vertex));
+		}
+		else {
+			ld.addLoopyVertex(new_set.second, new_vertex);
+		}
+		*/
 	}
 
 

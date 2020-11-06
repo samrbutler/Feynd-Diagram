@@ -140,7 +140,7 @@ listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1) {
 			currentindex[i] = 0;
 			indexmax[i] = productlist[i].size();
 		}
-
+		int k{};
 		while (true) {
 			//Set up container
 			std::vector<P> toadd{};

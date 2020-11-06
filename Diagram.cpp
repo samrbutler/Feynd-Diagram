@@ -198,7 +198,6 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 		for (pairedgrouping grp : groupinglist) {
 			//...get a list of possible new products for this group
 			listofproducts prodlist{ getNewExterns(grp, nto1) };
-
 			//DEBUG : Display the current grouping and what it will reduce to
 			if (debug) {
 				std::cout << "Current Grouping: \n\t";
@@ -247,8 +246,9 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 					std::vector<Particle> vertexparts {grp.first[i]};
 
 					//Add the new (anti)particle to the external container and add it to the vertex
-					particlestoadd.push_back(Particle(prodlist[j][i], true));
-					vertexparts.push_back(particlestoadd.back());
+					Particle p_to_add(prodlist[j][i], true);
+					particlestoadd.push_back(p_to_add);
+					vertexparts.push_back(p_to_add.toggleAntiPart());
 
 					//DEBUG: Print out the vertex that's going to be added
 					if (debug) {

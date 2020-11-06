@@ -24,11 +24,14 @@ int main()
 	Particle p2{ P::phi };
 
 	Timer t;
-	auto returns{ connect1PI(std::vector<Particle> {p1, p2},1) };
+
+	std::vector<Particle> x{ p1,p2 };
+
+	auto returns{ connect1PI(x,2) };
 	auto time{ t.elapsed() };
 
 	for (LoopDiagram& ld : returns) {
-		std::cout << ld << '\n';
+		//std::cout << ld << '\n';
 	}
 
 	std::cout << "\n\nCompleted in " << time << " seconds.\n\n";

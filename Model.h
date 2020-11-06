@@ -31,7 +31,7 @@ namespace Model {
 		psi,
 		antipsi,
 	};
-	inline constexpr std::array<ParticleType, 3> all_ParticleTypes{ ParticleType::phi,ParticleType::psi,ParticleType::antipsi };
+	inline constexpr std::array<ParticleType, 4> all_ParticleTypes{ ParticleType::phi,ParticleType::psi,ParticleType::antipsi,ParticleType::chi };
 }
 
 //Alias for the ParticleType enum class
