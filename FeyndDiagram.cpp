@@ -20,18 +20,20 @@ int main()
 
 	//TEST CODE
 
-	Particle p1{ P::phi };
-	Particle p2{ P::phi };
+	P p1{ P::psi };
+	P p2{ P::antipsi };
+	P p3{ P::psi };
+	P p4{ P::antipsi };
 
 	Timer t;
 
-	std::vector<Particle> x{ p1,p2 };
-
-	auto returns{ connect1PI(x,2) };
+	std::vector<Particle> x{ p1,p2,p3,p4 };
+	Process p({ p1,p2 }, { p3,p4 });
+	auto returns{ connect(p) };
 	auto time{ t.elapsed() };
 
-	for (LoopDiagram& ld : returns) {
-		//std::cout << ld << '\n';
+	for (Diagram& ld : returns) {
+		std::cout << ld << '\n';
 	}
 
 	std::cout << "\n\nCompleted in " << time << " seconds.\n\n";

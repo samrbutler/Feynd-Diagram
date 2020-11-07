@@ -50,11 +50,10 @@ bool operator==(const LoopyVertex& lv1, const LoopyVertex& lv2) {
 }
 
 std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& dictionary) {
-
+	//This function is going to generate new particles that will go out of scope, so copy the static particle ID counter and reset it later
 	std::vector<LoopyVertex> toReturn;
-
+	int storage = Point::getStaticID();
 	for (const std::pair<std::multiset<P>, std::multiset<P>>& vertex : dictionary) {
-
 		//Get the multiset of particle types that we need to group
 		const std::multiset<P>& toGroup{ vertex.second };
 		//Get the multiset of inbound particles
@@ -76,7 +75,7 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 			//Work out how many loops this combination is going to add
 			int* num_vertex_loops{ new int[num_groups] {} };
 			for (size_t i{}; i < num_groups; ++i) {
-				num_vertex_loops[i] = perm.first[i].size() - 1;
+				num_vertex_loops[i] = static_cast<int>(perm.first[i].size() - 1);
 			}
 			int total_loops{ std::accumulate(num_vertex_loops, num_vertex_loops + num_groups, 0) };
 
@@ -132,10 +131,24 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 				toReturn.push_back(lvtoadd);
 		}
 	}
+	//Reset the static ID counter and return
+	Point::setStaticID(storage);
 	return toReturn;
 }
 
-
+std::vector<int> getLoopSignature(const std::vector<Particle>& inbound) {
+	//Set up container
+	std::vector<int> inbound_loop_signature;
+	for (const Particle& p : inbound) {
+		std::vector<int> this_signature{ p.getLoops() };
+		for (const int loop_id : this_signature) {
+			std::vector<int>::iterator loc{ std::find(inbound_loop_signature.begin(),inbound_loop_signature.end(), -loop_id) };
+			if (loc == inbound_loop_signature.end()) inbound_loop_signature.push_back(loop_id);
+			else inbound_loop_signature.erase(loc);
+		}
+	}
+	return inbound_loop_signature;
+}
 
 newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loops, const std::vector<LoopyVertex>& loopyvs) {
 
@@ -157,8 +170,7 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 	//Go through all the normal vertices and add any matches
 	for (auto interaction : Model::n_to_many) {
 		if (interaction.first == inbound_types
-			&& static_cast<int>(interaction.second.size()) - 1 <= max_loops
-			) {
+			&& static_cast<int>(interaction.second.size()) - 1 <= max_loops) {
 			new_loops.push_back(std::make_pair(interaction.second, LV_null));
 		}
 	}
@@ -190,7 +202,15 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 				new_particles.push_back(Particle(part, true, loop_ids));
 			}
 		}
-		//Add this to the possiblities
+
+		//Get the additional inbound loop momentum signature
+		std::vector<int> inbound_loop_signature{ getLoopSignature(inbound) };
+		//And add it to each of the new particles
+		for (Particle& p : new_particles) {
+			p.addLoop(inbound_loop_signature);
+		}
+
+		//Add the results to the possiblities
 		output.push_back(std::make_pair(new_particles, profile.second));
 
 	}
@@ -199,88 +219,80 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 }
 
 //TO DO : Add arguments for non-model dictionaries
-std::vector<LoopDiagram> connect1PI(const std::vector<Particle>& external_particles, const int num_loops, const std::vector<LoopyVertex>& loopyvs) {
+std::vector<LoopDiagram> connect1PI(const LoopDiagram& diag, const int num_loops,
+	const std::vector<LoopyVertex>& loopyvs, const n0dict& nto0, const n1dict& nto1, bool debug) {
 
-	int remaining_loops{ num_loops };
+	std::vector<Particle> external_particles{ diag.getExterns() };
 	std::vector<LoopDiagram> list_of_diagrams;
 
 	/* ALGORITHM - we take a vector of m external particles and return all *specific* 1PI completions at num_loops
-	*			 - an X in the margin indicates the corresponding portion has been implemented
-	*X  > Declare (without loss of generality since this is 1PI) the first external particle to be the starting point of the first loop
-	*X  > Go through all the 1->n vertices, spawning (n-1) new loops
-	*X		- Add the appropriate loop momenta to a tracking vector (use + and - to indicate direction and a static id number to indicate value)
-	*		- Complete the resulting diagrams using an appropriate combination of 1PI loop diagrams of lesser loop order
-	*			= Convert n->0 loop topologies to n->1 topologies
-	*			= Use connection algorithm as before with additional loopy topologies and allowances for 1->1 loopy interactions
-	*			= Additional restriction is that legs carrying loop momenta cannot connect to external particles - when spawning a new
-	*			  leg from an n->1 interaction work out what momenta the new leg carries
+	*   > Declare (without loss of generality since this is 1PI) the first external particle to be the starting point of the first loop
+	*   > Go through all the 1->n vertices, spawning (n-1) new loops
 	*		- If connection fails, skip this vertex. Otherwise, add the result to the output list
-	*X	> Now consider pairing the first external particle to all other inbound particles in turn and go through the 2->n vertices.
-			- Repeat the above subalgorithm with the new subgraphs
+	*	> Now consider pairing the first external particle to all other inbound particles in turn and go through the 2->n vertices.
+	*		- Repeat the above subalgorithm with the new subgraphs
 	*	> Keep going until the first external particle is being grouped with
-	*		A) (m-1) of the remaining external particles (i.e. after introducing loops they have somewhere to connect to)
+	*		A) (m-2) of the remaining external particles (i.e. after introducing loops they have somewhere to connect to)
 	*	 or B) (max_int-2) others for max_int the largest number of particles that can simultaneously interact at a vertex
-	*X	> If condition A was met, now check if this could be a loopy vertex (these have been generated in advance in generic form)
+	*	> If condition A was met, now check if this could be a loopy vertex (these have been generated in advance in generic form)
 	*/
 
-	const int m{ static_cast<int>(external_particles.size()) };
-
+	//Take the first particle to be the reference point
 	const Particle& loop_start{ external_particles[0] };
-	const P start_type{ loop_start.getType() };
 
+	//Collect the other particles in a vector: we can select from these to combine with the reference particle
 	const std::vector<Particle> particles_available(external_particles.begin() + 1, external_particles.end());
 
-	newloopvalues new_particle_data{ spawnLoops(std::vector<Particle> {loop_start}, remaining_loops) };
-
-	//CHECK THAT LOOPS ARE BEING SPAWNED CORRECTLY
-	for (auto loopvalue : new_particle_data) {
-		for (const Particle& part : loopvalue.first) {
-			std::cout << part.getType() << " (" << part.getID() << ") carrying momenta: ";
-			for (int loop : part.getLoops()) {
-				std::cout << loop << " , ";
-			}
-			std::cout << '\n';
-		}
-		std::cout << "\n===============================\n";
-	}
-	std::cout << '\n';
-	//
-
-	for (std::pair<std::vector<Particle>, LoopyVertex>& new_set : new_particle_data) {
-		//Add the antiparticles of new_set to loop_start and connect to the (possibly loopy) vertex
-		//Add all the new particles to a subdiagram and call the loopy version of connect with the appropriate number of loops
-		std::vector<Particle> new_vertex{ loop_start };
-		std::vector<Particle> new_externs{ particles_available };
-		for (Particle& p : new_set.first) {
-			new_vertex.push_back(p.toggleAntiPart());
-			p.toggleAntiPart();
-			new_externs.push_back(p);
-		}
-		/*
-		std::vector<LoopDiagram> subdiagrams{ connectFull(~new_externs~) };  <========== Still need to implement connectFull
-		for (LoopDiagram& ld : subdiagrams)
-		if (new_set.second.is_null) {
-			ld.addVertex(Vertex(new_vertex));
-		}
-		else {
-			ld.addLoopyVertex(new_set.second, new_vertex);
-		}
-		*/
-	}
-
-
-	/*
 	//Choose how many more particles are going to combine before spawning the loop
-	for (int i{ 1 }; i <= std::min(m - 1, Model::max_legs - 2); ++i) {
+	for (int i{ 0 }; i <= std::min(static_cast<int>(external_particles.size()) - 2, Model::max_legs - 2); ++i) {
+		//Get the list of new particles that are going to combine
 		listofpairedgroupings choices{ getSubsets(particles_available, i,i) };
+		//For each choice:
 		for (const pairedgrouping& pg : choices) {
-			for (const Particle& part : pg.first[0]) {
-				std::cout << part.getType() << " (" << part.getID() << ") , ";
+			//Set up the list of particles to combine
+			std::vector<Particle> to_combine{ loop_start };
+			to_combine.insert(to_combine.end(), pg.first[0].begin(), pg.first[0].end());
+
+			//Set up the list of particles that will be left over
+			std::vector<Particle> particles_available_after_grouping{ pg.second };
+
+			//Spawn the new particles
+			newloopvalues new_particle_data{ spawnLoops(std::vector<Particle> {to_combine}, num_loops) };
+
+			//For each "spawned loop":
+			for (std::pair<std::vector<Particle>, LoopyVertex>& new_set : new_particle_data) {
+				//Start to create the vertex particle list
+				std::vector<Particle> new_vertex{ to_combine };
+				//Work out how many loops are left
+				int remaining_loops = num_loops - static_cast<int>(new_set.first.size()) + 1;
+				if (!new_set.second.is_null) remaining_loops -= new_set.second.num_loops;
+				//Set up the new external particle container for the subdiagram
+				std::vector<Particle> new_externs{ particles_available_after_grouping };
+				//For each particle spawned:
+				for (Particle& p : new_set.first) {
+					//Toggle to the antiparticle and add it to the vertex
+					new_vertex.push_back(p.toggleAntiPart());
+					//Toggle back to the particle and add it to the external container
+					new_externs.push_back(p.toggleAntiPart());
+				}
+
+				//Create the base diagram and add the distinguished (loopy) vertex
+				LoopDiagram base_diagram(external_particles);
+				if (new_set.second.is_null) base_diagram.addVertex(Vertex(new_vertex));
+				else base_diagram.addLoopyVertex(new_set.second, new_vertex);
+
+				LoopDiagram base_subdiagram(new_externs);
+				//Connect the subdiagram
+				std::vector<LoopDiagram> subdiagrams{ connectSubdiagram(base_subdiagram, remaining_loops) };
+				//For each completed subdiagram:
+				for (LoopDiagram& ld : subdiagrams) {
+					//Add the new vertices to the base diagram
+					base_diagram.addVertices(ld.getVertices());
+				}
+				list_of_diagrams.push_back(base_diagram);
 			}
-			std::cout << '\n';
 		}
 	}
-	*/
 
 	if (external_particles.size() <= Model::max_legs) {
 		//Get the external particle types
@@ -302,4 +314,80 @@ std::vector<LoopDiagram> connect1PI(const std::vector<Particle>& external_partic
 	}
 
 	return list_of_diagrams;
+}
+
+std::vector<LoopDiagram> connectSubdiagram(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs,
+	const n0dict& nto0, const n1dict& nto1, const bool debug) {
+
+	/* ALGORITHM
+	*	> Check the loop status of the remaining particles: if none of the particles are carrying loop momentum or
+	*	  the loop momenta do not cancel out then we have failed
+	*	> Check if the remaining particles can connect directly into a simple vertex or 1PI diagram with at least
+	*	  two active particles and the required number of loops. Add all possible successful connections to the list
+	*	> If there are two particles and they haven't connected above, connection has failed, so return early.
+	*	> Otherwise, get all possible groupings of the external particles
+	*		> For each grouping, get all possible vertex-level products and work out their loop momenta
+	*			> If each group does not include at least one active particle, skip this grouping
+	*			> Go through all possible products and get the new external particles.
+	*				> Set these new particles active, the other particles passive and make a subdiagram
+	*				> Use recursion to connect the subdiagram
+	*					> If the subdiagram returned connections, combine the subdiagram into the current diagram and add it to the list
+	*					> If the subdiagram fails to connect, go to the next product
+	*			> If all products failed to produce a connected diagram, continue
+	*		> For each grouping, go through every particle in the theory, and see if we can generate
+	*		  a 1PI diagram to get to this target particle
+	*			- This requires us to generate groupings of size 1
+	*
+	*/
+
+	const std::vector<Particle>& externs{ diag.getExterns() };
+
+	//If the loop momenta will not cancel out, return early
+	if (getLoopSignature(externs).size() != 0) return {};
+
+	//If no loop momenta are present at all, we have failed
+	bool loops_exist{ false };
+	for (const Particle& p : externs) {
+		if (p.getLoops().size() != 0) loops_exist = true;
+	}
+	if (!loops_exist) return {};
+
+	std::vector<Diagram> returnvec;
+
+	//DEBUG: Print details about all the current external particles
+	if (debug) {
+		std::cout << "Current External Particles\n";
+		for (const Particle& part : externs) {
+			std::cout << part.getType() << " , " << part.isActive() << " | ";
+		}
+		std::cout << '\n';
+		std::cout << "---------------------------------------------\n";
+	}
+
+	//Store the number of external particles
+	size_t s{ externs.size() };
+
+	//Check to see if we can form a vertex
+	if (diag.isVertex(nto0)) {
+		//DEBUG: Declare this to be a vertex
+		if (debug) {
+			std::cout << "IS VERTEX : DONE\n";
+			std::cout << "=============================================\n";
+		}
+
+		//Return a single diagram consisting of the external points and a vertex connecting them
+		returnvec.push_back(LoopDiagram(externs, Vertex(externs)));
+	}
+	
+	std::vector<LoopDiagram> completions{ connect1PI(diag,num_loops) };
+	returnvec.insert(returnvec.end(), completions.begin(), completions.end());
+
+
+
+
+
+
+
+
+	return {};
 }

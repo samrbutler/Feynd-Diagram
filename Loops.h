@@ -42,7 +42,7 @@ namespace Model {
 	inline const std::vector<LoopyVertex> loopy_vertices{ getLoopyVertices(Model::max_legs) };
 }
 
-/*List of tuples containing:
+/*List of pairs containing:
 *	std::multiset<P> - the new outbound particle types
 *	LoopyVertex   - pointer to the LoopyVertex responsible (or nullptr if not)
 */
@@ -52,4 +52,8 @@ using newloopvalues = std::vector<std::pair<std::vector<Particle>, LoopyVertex>>
 
 newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices);
 
-std::vector<LoopDiagram> connect1PI(const std::vector<Particle>& external_particles, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices);
+std::vector<LoopDiagram> connect1PI(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices,
+	const n0dict& nto0 = Model::n_to_0, const n1dict& nto1 = Model::n_to_1, const bool debug = false);
+
+std::vector<LoopDiagram> connectSubdiagram(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices,
+	const n0dict& nto0 = Model::n_to_0, const n1dict& nto1 = Model::n_to_1, const bool debug = false);

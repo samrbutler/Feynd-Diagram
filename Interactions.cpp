@@ -123,7 +123,7 @@ listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1) {
 		const grouping& groups{ pair.first };
 
 		//Count how many groups there are
-		int numgroups = groups.size();
+		int numgroups = static_cast<int>(groups.size());
 
 		//Receive a list of possible products for each group
 		std::vector<std::vector<P>> productlist;
@@ -138,7 +138,7 @@ listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1) {
 		int* currentindex{ new int[numgroups] {} };
 		for (int i{}; i < numgroups; ++i) {
 			currentindex[i] = 0;
-			indexmax[i] = productlist[i].size();
+			indexmax[i] = static_cast<int>(productlist[i].size());
 		}
 		int k{};
 		while (true) {

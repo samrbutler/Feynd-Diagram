@@ -62,7 +62,6 @@ namespace Model {
 	};
 }
 
-
 std::ostream& operator<<(std::ostream& out, const P part);
 P getAntiParticle(const P part);
 n1dict generateN1Dictionary(const n0dict & = Model::n_to_0);

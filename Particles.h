@@ -31,6 +31,10 @@ public:
 	//Return the ID of the point
 	int getID() const { return m_id; }
 
+	//Return the current ID counter
+	static int getStaticID() { return next_id; }
+	//Set the current ID counter
+	static void setStaticID(const int x) { next_id = x ; }
 };
 
 //Overload operator< to compare point IDs
@@ -51,6 +55,8 @@ class Particle : public Point {
 	bool m_active;
 	//Which loops does this particle "belong" to
 	std::vector<int> m_loops;
+	//Is this particle external, i.e. is it allowed to carry loop momentum?
+	bool m_external;
 
 public:
 
@@ -73,11 +79,12 @@ public:
 	//Delete the default constructor: you *must* define at least the particle type on generation
 	Particle() = delete;
 
-	//Construct given particle type and (optionally) activity
-	Particle(const P PType, const bool isAct = true) : m_ptype{ PType }, m_active{ isAct }, m_loops{} {}
+	//Construct given particle type and (optionally) activity and externality
+	Particle(const P PType, const bool isAct = true, const bool isExt = true) : m_ptype{ PType }, m_active{ isAct }, m_loops{}, m_external{ isExt } {}
 	//Construct given particle type, activity and the loop property
-	Particle(const P PType, const bool isAct, const std::vector<int> loops) : m_ptype{ PType }, m_active{ isAct }, m_loops{ loops } {}
+	Particle(const P PType, const bool isAct, const std::vector<int> loops) : m_ptype{ PType }, m_active{ isAct }, m_loops{ loops }, m_external{ false } {}
 };
 
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
 bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>& part2);
+std::ostream& operator<< (std::ostream& out, const Particle& p);

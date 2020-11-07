@@ -12,6 +12,7 @@
 int Point::next_id{ 0 };
 
 Particle Particle::addLoop(const std::vector<int> loop_ids) {
+	if (m_external == true) throw - 1;
 	for (const int loop_id : loop_ids) {
 		std::vector<int>::iterator loc{ std::find(m_loops.begin(),m_loops.end(), -loop_id) };
 		if (loc == m_loops.end()) m_loops.push_back(loop_id);
@@ -54,4 +55,9 @@ bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>&
 
 	//They must now be equal
 	return false;
+}
+
+std::ostream& operator<< (std::ostream& out, const Particle& p) {
+	std::cout << p.getType() << " (" << p.getID() << ")";
+	return out;
 }
