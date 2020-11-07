@@ -352,7 +352,7 @@ std::vector<LoopDiagram> connectSubdiagram(const LoopDiagram& diag, const int nu
 	}
 	if (!loops_exist) return {};
 
-	std::vector<Diagram> returnvec;
+	std::vector<LoopDiagram> returnvec;
 
 	//DEBUG: Print details about all the current external particles
 	if (debug) {
@@ -382,12 +382,11 @@ std::vector<LoopDiagram> connectSubdiagram(const LoopDiagram& diag, const int nu
 	std::vector<LoopDiagram> completions{ connect1PI(diag,num_loops) };
 	returnvec.insert(returnvec.end(), completions.begin(), completions.end());
 
-
-
-
-
-
-
-
-	return {};
+	//Group up particles in groups of size >= 1
+	//Go through all groupings
+	//If group size >=2: look for (possibly loopy) ways of producing 1 additional particle.
+	//For every grouping go through every particle in the theory
+	//	> Determine all 1PI subdiagrams to transition the group to the new particle at all loop orders between 1 and num_loops
+	//Connect the subdiagrams at the appropriate loop order
+	return returnvec;
 }
