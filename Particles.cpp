@@ -4,6 +4,7 @@
 #include "Particles.h"
 
 #include "Model.h"
+#include "Utilities.h"
 
 #include <iostream>
 #include <vector>
@@ -58,6 +59,15 @@ bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>&
 }
 
 std::ostream& operator<< (std::ostream& out, const Particle& p) {
-	std::cout << p.getType() << " (" << p.getID() << ")";
+	out << p.getType() << " (" << p.getID() << ")";
+	return out;
+}
+
+std::ostream& operator<<(std::ostream& out, const std::vector<Particle>& v) {
+	out << " Particles | ";
+	for (int i{}; i < v.size(); ++i) {
+		out << v[i];
+		if (i != v.size() - 1) out << ", ";
+	}
 	return out;
 }

@@ -9,6 +9,7 @@
 #include "Model.h"
 #include "Interactions.h"
 #include "Particles.h"
+#include "Utilities.h"
 
 #include <numeric>
 #include <set>
@@ -388,18 +389,21 @@ std::vector<LoopDiagram> connectSubdiagram(LoopDiagram& diag, const int num_loop
 	if (debug) std::cout << "Found " << direct_completions.size() << " 1PI completions of this process.\n";
 	returnvec.insert(returnvec.end(), direct_completions.begin(), direct_completions.end());
 
+	//Group up particles in groups of size >= 1
 	pairedgrouping input{ std::make_pair(grouping{},externs) };
 	listofpairedgroupings groupinglist{ getGroupings(input,1) };
 
+	//Go through all groupings
 	for (const pairedgrouping& pg : groupinglist) {
+		//If group size >=2: look for (possibly loopy) ways of producing 1 additional particle.
+		
+
+
+		//For every grouping go through every particle in the theory
+		//	> Determine all 1PI subdiagrams to transition the group to the new particle at all loop orders between 1 and num_loops
+		//Connect the subdiagrams at the appropriate loop order
 
 	}
-	//Group up particles in groups of size >= 1
-	//Go through all groupings
-	//If group size >=2: look for (possibly loopy) ways of producing 1 additional particle.
-	//For every grouping go through every particle in the theory
-	//	> Determine all 1PI subdiagrams to transition the group to the new particle at all loop orders between 1 and num_loops
-	//Connect the subdiagrams at the appropriate loop order
 
 	return returnvec;
 }

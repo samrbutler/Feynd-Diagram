@@ -13,6 +13,7 @@
 #include <iterator>
 #include <map>
 #include <set>
+#include <vector>
 
 //A list of the products following the interactions prescribed by a grouping
 using listofproducts = std::vector<std::vector<P>>;
@@ -35,6 +36,8 @@ public:
 
 	//Return the list of point IDs that are connected to this vertex
 	const std::vector<int>& getConnectionIDs() const { return m_connection_ids; }
+	//Return a modifiable list of point IDs that are connected to this vertex
+	std::vector<int>& getModifiableConnectionIDs() { return m_connection_ids; }
 
 	//Return the list of point types that are connected to this vertex
 	const std::vector<P>& getConnectionTypes() const { return m_connection_types; }
@@ -51,8 +54,13 @@ public:
 	//Construct with a cutoff for the number of vertices
 	Vertex(int legs) : m_numlegs{ legs }, m_vertextype{}, m_isProp{}, m_connection_ids{}, m_connection_types{} {}
 
+	Vertex& cleanup();
+
 	bool addLegs(const std::vector<int>& idstoadd, const std::vector<P>& typestoadd);
 };
+
+std::ostream& operator<<(std::ostream& out, const Vertex& v);
+std::ostream& operator<<(std::ostream& out, const std::vector<Vertex>& v);
 
 std::multiset<P> vec2multiset(const std::vector<Particle>& group);
 bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary = Model::n_to_1);

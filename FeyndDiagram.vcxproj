@@ -151,7 +151,7 @@
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="FeyndDiagram.cpp" />
     <ClCompile Include="Interactions.cpp" />
-    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Utilities.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Diagram.h" />
@@ -161,7 +161,7 @@
     <ClInclude Include="Loops.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="Particles.h" />
-    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Utilities.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />

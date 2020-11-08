@@ -30,6 +30,7 @@ public:
 
 	//Return the ID of the point
 	int getID() const { return m_id; }
+	void setID(const int id) { m_id = id; }
 
 	//Return the current ID counter
 	static int getStaticID() { return next_id; }
@@ -88,3 +89,4 @@ public:
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
 bool operator!=(const std::vector<Particle>& part1, const std::vector<Particle>& part2);
 std::ostream& operator<< (std::ostream& out, const Particle& p);
+std::ostream& operator<<(std::ostream& out, const std::vector<Particle>& v);

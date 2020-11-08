@@ -5,6 +5,7 @@
 
 #include "Model.h"
 #include "Particles.h"
+#include "Utilities.h"
 
 #include <algorithm>
 #include <utility>

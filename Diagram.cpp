@@ -9,6 +9,7 @@
 #include "Interactions.h"
 #include "Model.h"
 #include "Particles.h"
+#include "Utilities.h"
 
 #include <iterator>
 #include <vector>
@@ -58,6 +59,33 @@ bool Diagram::isVertex(const n0dict& dictionary) const
 	}
 }
 
+Diagram& Diagram::cleanup() {
+	std::map<int, int> id_map;
+	int counter{ 1 };
+	for (Particle& p : m_externs) {
+		int i{ p.getID() };
+		auto loc{ id_map.find(i) };
+		if (loc != id_map.end()) p.setID(loc->second);
+		else {
+			id_map.insert(std::make_pair(i, counter));
+			p.setID(counter++);
+		}
+	}
+	for (Vertex& v : m_vertices) {
+		for (int& i : v.getModifiableConnectionIDs()) {
+			auto loc{ id_map.find(i) };
+			if (loc != id_map.end()) i = loc->second;
+			else {
+				id_map.insert(std::make_pair(i, counter));
+				i = counter++;
+			}
+		}
+		v.cleanup();
+	}
+	std::sort(m_vertices.begin(), m_vertices.end(), [](const Vertex& v1, const Vertex& v2) -> bool { return (v1.getConnectionIDs()[0]< v2.getConnectionIDs()[0]); });
+	return *this;
+}
+
 //Create a process from incoming and outgoing particle names
 Process::Process(const std::vector<P> incoming, const std::vector<P> outgoing) {
 	for (P part : incoming) {
@@ -75,32 +103,10 @@ Process::Process(const std::vector<P> incoming, const std::vector<P> outgoing) {
 
 //Allow for output of a diagram to std::cout
 std::ostream& operator<< (std::ostream& out, const Diagram& diag) {
-	std::cout << "\t Externals | ";
-	for (const Particle& part : diag.getExterns()) {
-		std::cout << part.getType() << " (" << part.getID() << "), ";
-	}
-	std::cout << '\n';
+	std::cout << diag.getExterns() << '\n';
 	//Loop through the vertices
 	for (const Vertex& vertex : diag.getVertices()) {
-		//Get particle information
-		std::vector<int> legids{ vertex.getConnectionIDs() };
-		std::vector<P> legtypes{ vertex.getConnectionTypes() };
-
-		//If there are two particles at the vertex and it's a particle/antiparticle pair, this is a propagator...
-		//...so display the propagator type and the connected point IDs
-		if (legids.size() == 2) {
-			std::cout << "\tPropagator | ";
-			std::cout << legtypes[0] << " (" << legids[0] << "," << legids[1] << "), ";
-		}
-
-		//Otherwise this is a vertex, so display the connected point types and their IDs
-		else {
-			std::cout << "\t    Vertex | ";
-			for (size_t i{}; i < legids.size(); ++i) {
-				std::cout << legtypes[i] << " (" << legids[i] << "), ";
-			}
-		}
-		std::cout << '\n';
+		std::cout << vertex << '\n';
 	}
 
 	return out;

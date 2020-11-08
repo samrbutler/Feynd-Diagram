@@ -8,6 +8,7 @@
 #include "Interactions.h"
 #include "Model.h"
 #include "Particles.h"
+#include "Utilities.h"
 
 #include <iterator>
 #include <vector>
@@ -46,6 +47,8 @@ public:
 	void addVertices(const std::vector<Vertex>& verts);
 
 	bool isVertex(const n0dict& dictionary = Model::n_to_0) const;
+
+	Diagram& cleanup();
 
 };
 

@@ -3,6 +3,7 @@
 */
 
 #include "Model.h"
+#include "Utilities.h"
 
 #include <algorithm>
 #include <iterator>
@@ -13,23 +14,25 @@
 #include <tuple>
 #include <vector>
 
+const std::array<P, static_cast<int>(P::END)> getPartTypes() {
+	std::array<P, static_cast<int>(P::END)> types;
+	for (int i{}; i < static_cast<int>(P::END); ++i) {
+		types[i] = static_cast<P> (i);
+	}
+	return types;
+}
+
+const int getMaxLegs() {
+	int maxed{ 0 };
+	for (const std::multiset<P>& interaction : Model::n_to_0) {
+		if (interaction.size() > maxed) maxed = static_cast<int>(interaction.size());
+	}
+	return maxed;
+}
+
 //Allow for output of ParticleTypes to std::cout
 std::ostream& operator<< (std::ostream& out, const P part) {
-	//Switch based on the particle type
-	switch (part) {
-	case P::phi:
-		out << "Phi";
-		break;
-	case P::chi:
-		out << "Chi";
-		break;
-	case P::psi:
-		out << "Psi";
-		break;
-	case P::antipsi:
-		out << "Antipsi";
-		break;
-	}
+	out << Model::particle_names[static_cast<int>(part)];
 	return out;
 }
 
