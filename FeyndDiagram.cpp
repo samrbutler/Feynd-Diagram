@@ -24,14 +24,11 @@ int main()
 	P p2{ P::antipsi };
 	P p3{ P::psi };
 	P p4{ P::antipsi };
-
+		
+	LoopDiagram p({ p1,p2, p3,p4 });
 	Timer t;
-
-	std::vector<Particle> x{ p1,p2,p3,p4 };
-	Process p({ p1,p2 }, { p3,p4 });
-	auto returns{ connect(p) };
+	auto returns{ connect1PI(p,1,Model::loopy_vertices,Model::n_to_0,Model::n_to_1,false) };
 	auto time{ t.elapsed() };
-
 	for (Diagram& ld : returns) {
 		std::cout << ld << '\n';
 	}

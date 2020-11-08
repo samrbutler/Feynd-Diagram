@@ -46,9 +46,12 @@ using loopdict = std::set<std::pair<std::multiset<P>, std::multiset<P>>>;
 namespace Model {
 	//Define the n->0 dictionary
 	inline const n0dict n_to_0{
-		{P::phi,P::phi,P::phi,P::phi},
-		{P::phi,P::psi,P::antipsi},
-		{P::phi,P::phi,P::chi,P::chi}
+		//{P::phi,P::phi,P::phi,P::phi},
+		//{P::phi,P::phi,P::chi,P::chi},
+		//{P::phi,P::psi,P::antipsi}
+		{P::psi,P::antipsi,P::phi,P::phi},
+		{P::phi,P::phi,P::chi},
+		{P::chi,P::psi,P::antipsi}
 	};
 
 	inline constexpr int max_legs{ 4 };

@@ -73,7 +73,7 @@ listofpairedgroupings getSubsets(const std::vector<Particle>& input, const size_
 }
 
 //Given a partially completed 'pairedgrouping', return all possible completions of the grouping without duplicates
-listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
+listofpairedgroupings getGroupings(const pairedgrouping& pairup, const int min_size) {
 	//Create the empty vector of groupings
 	listofpairedgroupings list{};
 
@@ -87,11 +87,11 @@ listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
 	const std::vector<Particle>& notPaired{ pairup.second };
 
 	//If we can form another group, do it  
-	if (notPaired.size() > 1) {
+	if (notPaired.size() >= min_size) {
 		//Go through each of the new subsets
-		for (const pairedgrouping& pairup : getSubsets(notPaired)) {
+		for (const pairedgrouping& pairup : getSubsets(notPaired,min_size)) {
 			//Initiate recursion to get groupings from unpaired elements
-			listofpairedgroupings newgroupings{ getGroupings(pairup) };
+			listofpairedgroupings newgroupings{ getGroupings(pairup,min_size) };
 
 			//For each new grouping that is available
 			for (pairedgrouping newgroup : newgroupings) {
@@ -110,7 +110,7 @@ listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
 			}
 		}
 	}
-	//Set up container for duplicates
+	//Set up container
 	listofpairedgroupings nodupes{};
 
 	//Loop over groupings
@@ -135,6 +135,5 @@ listofpairedgroupings getGroupings(const pairedgrouping& pairup) {
 		//If we haven't found this grouping yet, add it to the list
 		if (!isfound) nodupes.push_back(list[i]);
 	}
-
 	return nodupes;
 }

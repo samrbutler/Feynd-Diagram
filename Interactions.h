@@ -55,6 +55,6 @@ public:
 };
 
 std::multiset<P> vec2multiset(const std::vector<Particle>& group);
-bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary);
-std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dictionary);
-listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1);
+bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary = Model::n_to_1);
+std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dictionary = Model::n_to_1);
+listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1 = Model::n_to_1);

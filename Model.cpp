@@ -43,7 +43,7 @@ n1dict generateN1Dictionary(const n0dict& inters) {
 	n1dict nto1s{};
 
 	//Loop over all the interactions via iterators
-	for (n0dict::const_iterator interaction{ inters.begin() }; interaction != inters.end(); ++interaction) {
+	for (n0dict::const_iterator interaction{ inters.cbegin() }; interaction != inters.cend(); ++interaction) {
 
 		//Aim: Identify each element in turn and make it the product of an n-to-1 interaction
 

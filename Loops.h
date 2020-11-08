@@ -25,6 +25,8 @@ static inline const LoopyVertex LV_null{ {},{},{},{},0,true };
 class LoopDiagram : public Diagram {
 
 public:
+	LoopDiagram(const Diagram& diag) : Diagram(diag) {}
+
 	LoopDiagram(const std::vector<Particle>& externs) : Diagram(externs) {}
 
 	LoopDiagram(const std::vector<Particle>& externs, const Vertex& vertex) : Diagram(externs, vertex) {}
@@ -37,6 +39,10 @@ public:
 bool operator==(const LoopyVertex& lv1, const LoopyVertex& lv2);
 
 std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& dictionary = Model::n_to_many);
+
+std::vector<int> getLoopSignature(const std::vector<Particle>& inbound);
+
+std::vector<int> invertLoopSignature(const std::vector<int>& sig);
 
 namespace Model {
 	inline const std::vector<LoopyVertex> loopy_vertices{ getLoopyVertices(Model::max_legs) };
@@ -55,5 +61,7 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 std::vector<LoopDiagram> connect1PI(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices,
 	const n0dict& nto0 = Model::n_to_0, const n1dict& nto1 = Model::n_to_1, const bool debug = false);
 
-std::vector<LoopDiagram> connectSubdiagram(const LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices,
+std::vector<LoopDiagram> connectSubdiagram(LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs = Model::loopy_vertices,
 	const n0dict& nto0 = Model::n_to_0, const n1dict& nto1 = Model::n_to_1, const bool debug = false);
+
+std::vector<LoopDiagram> connectZero(LoopDiagram& diag, const n0dict& nto0 = Model::n_to_0, const n1dict& nto1 = Model::n_to_1, const bool debug = false);
