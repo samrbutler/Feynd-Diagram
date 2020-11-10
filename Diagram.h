@@ -1,22 +1,18 @@
-/*Diagram.h :
-*
-*/
-
 #pragma once
 
 #include "Groups.h"
 #include "Interactions.h"
 #include "Model.h"
-#include "Particles.h"
-#include "Utilities.h"
+#include "Particle.h"
+#include "Vertex.h"
 
+#include <iostream>
 #include <iterator>
 #include <vector>
 
-
 //Define a class for a diagram
-class Diagram {
-
+class Diagram
+{
 protected:
 
 	//External particles
@@ -52,20 +48,4 @@ public:
 
 };
 
-//Extend the diagram class to allow initial setup of a process
-class Process : public Diagram {
-
-	//Incoming particle names
-	std::vector<P> m_incoming;
-	//Outgoing particle names
-	std::vector<P> m_outgoing;
-
-public:
-
-	//Create a process from incoming and outgoing particle names
-	Process(const std::vector<P> incoming, const std::vector<P> outgoing);
-};
-
 std::ostream& operator<<(std::ostream& out, const Diagram& diag);
-
-std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0 = Model::n_to_0, const n1dict& nto1 = Model::n_to_1, const bool debug = false);

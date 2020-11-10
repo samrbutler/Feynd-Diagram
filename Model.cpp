@@ -1,20 +1,7 @@
-/*Model.cpp :
-* 
-*/
-
 #include "Model.h"
-#include "Utilities.h"
 
-#include <algorithm>
-#include <iterator>
-#include <iostream>
-#include <map>
-#include <string>
-#include <set>
-#include <tuple>
-#include <vector>
-
-const std::array<P, static_cast<int>(P::END)> getPartTypes() {
+const std::array<P, static_cast<int>(P::END)> getPartTypes()
+{
 	std::array<P, static_cast<int>(P::END)> types;
 	for (int i{}; i < static_cast<int>(P::END); ++i) {
 		types[i] = static_cast<P> (i);
@@ -22,7 +9,8 @@ const std::array<P, static_cast<int>(P::END)> getPartTypes() {
 	return types;
 }
 
-const int getMaxLegs() {
+const int getMaxLegs()
+{
 	int maxed{ 0 };
 	for (const std::multiset<P>& interaction : Model::n_to_0) {
 		if (interaction.size() > maxed) maxed = static_cast<int>(interaction.size());
@@ -31,17 +19,21 @@ const int getMaxLegs() {
 }
 
 //Allow for output of ParticleTypes to std::cout
-std::ostream& operator<< (std::ostream& out, const P part) {
+std::ostream& operator<< (std::ostream& out, const P part)
+{
 	out << Model::particle_names[static_cast<int>(part)];
 	return out;
 }
 
 //Given a particle, return the name of its antiparticle
-P getAntiParticle(const P part) { return Model::AntiParticleDict.at(part); }
+P getAntiParticle(const P part)
+{
+	return Model::AntiParticleDict.at(part);
+}
 
 //Given a list of allowable interaction vertices, produce a list of all allowable n-to-1 interactions
-n1dict generateN1Dictionary(const n0dict& inters) {
-
+n1dict generateN1Dictionary(const n0dict& inters)
+{
 	//Create empty container
 	n1dict nto1s{};
 
@@ -81,8 +73,8 @@ n1dict generateN1Dictionary(const n0dict& inters) {
 }
 
 //Given the n->1 dictionary, return all possible k->m interactions where m>2
-loopdict getLoopDictionary(const n1dict& inters) {
-
+loopdict getLoopDictionary(const n1dict& inters)
+{
 	//Create empty container
 	loopdict dict;
 

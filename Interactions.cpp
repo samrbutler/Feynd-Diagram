@@ -1,91 +1,8 @@
-/*Interactions.cpp :
-*/
-
 #include "Interactions.h"
 
-#include "Groups.h"
-#include "Model.h"
-#include "Particles.h"
-#include "Utilities.h"
-
-#include <algorithm>
-#include <iostream>
-#include <iterator>
-#include <map>
-#include <set>
-#include <vector>
-
-Vertex::Vertex(const std::vector<Particle>& parts, const bool isProp) {
-	m_numlegs = static_cast<int>(parts.size());
-	m_vertextype = {};
-	m_isProp = isProp;
-	for (const Particle& part : parts) {
-		m_connection_ids.push_back(part.getID());
-		m_connection_types.push_back(part.getType());
-	}
-}
-
-//Add a point to the vertex if we can and return true if this was successful
-bool Vertex::addLegs(const std::vector<int>& idstoadd, const std::vector<P>& typestoadd) {
-	//Return early if the number of legs will exceed capacity
-	if (m_numlegs - m_connection_ids.size() - idstoadd.size() < 0) return false;
-	else {
-		//Go through and add all ids and types to the vertex
-		for (size_t i{}; i < idstoadd.size(); ++i) {
-			m_connection_ids.push_back(idstoadd[i]);
-			m_connection_types.push_back(typestoadd[i]);
-		}
-
-		//Success
-		return true;
-	}
-}
-
-Vertex& Vertex::cleanup() {
-	std::vector<std::pair<int, P>> container(m_numlegs);
-	for (int i{}; i < m_numlegs; ++i) {
-		container[i] = std::make_pair(m_connection_ids[i], m_connection_types[i]);
-	}
-	std::sort(container.begin(), container.end(), [](const std::pair<int, P>& x, const std::pair<int, P>& y) -> bool {return (x.first < y.first); });
-	for (int i{}; i < m_numlegs; ++i) {
-		m_connection_ids[i] = container[i].first;
-		m_connection_types[i] = container[i].second;
-	}
-	return *this;
-}
-
-std::ostream& operator<<(std::ostream& out, const Vertex& v) {
-
-	std::vector<int> legids{ v.getConnectionIDs() };
-	std::vector<P> legtypes{ v.getConnectionTypes() };
-
-	//If there are two particles at the vertex and it's a particle/antiparticle pair, this is a propagator...
-	//...so display the propagator type and the connected point IDs
-	if (legids.size() == 2) {
-		out << "Propagator | ";
-		out << legtypes[0] << " (" << legids[0] << ',' << legids[1] << ')';
-	}
-	//Otherwise this is a vertex, so display the connected point types and their IDs
-	else {
-		out << "    Vertex | ";
-		for (size_t i{}; i < legids.size(); ++i) {
-			out << legtypes[i] << " (" << legids[i] << ')';
-			if (i != legids.size() - 1) out << ", ";
-		}
-	}
-	return out;
-}
-
-std::ostream& operator<<(std::ostream& out, const std::vector<Vertex>& v) {
-	for (int i{}; i < v.size(); ++i) {
-		out << v[i];
-		if (i != v.size() - 1) out << '\n';
-	}
-	return out;
-}
-
 //Given a vector of particles, return a multiset of particlenames
-std::multiset<P> vec2multiset(const std::vector<Particle>& group) {
+std::multiset<P> vec2multiset(const std::vector<Particle>& group)
+{
 	//Create an empty multiset
 	std::multiset<P> groupnames{};
 
@@ -98,7 +15,8 @@ std::multiset<P> vec2multiset(const std::vector<Particle>& group) {
 }
 
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
-bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary) {
+bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary)
+{
 	//Get the grouplist
 	grouping grouplist{ pair.first };
 
@@ -132,7 +50,8 @@ bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary) {
 }
 
 //Given a particular particle group, return the antiparticles of products of the interaction from a dictionary
-std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dictionary) {
+std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dictionary)
+{
 	//Empty return vector
 	std::vector<P> vec;
 
@@ -155,7 +74,8 @@ std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dic
 }
 
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return the products expected from the implied interaction
-listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1) {
+listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1)
+{
 	//Empty container
 	listofproducts container;
 

@@ -1,13 +1,9 @@
-//Utilities.h : 
-
 #pragma once
 
 #include <chrono>
-#include <iostream>
-#include <vector>
 
-class Timer {
-
+class Timer
+{
 	using clock_t = std::chrono::high_resolution_clock;
 	using second_t = std::chrono::duration<double, std::ratio<1> >;
 

@@ -1,72 +1,139 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
     <Filter Include="Resource Files">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Interactions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Particles.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Diagram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Groups.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="FeyndDiagram.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Loops.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Utilities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Particles.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Interactions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Diagram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Groups.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FeyndDiagram.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Loops.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Utilities.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <Filter Include="Particles">
+      <UniqueIdentifier>{2b959509-7ead-4dcb-a749-1670c22b1c76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Diagrams">
+      <UniqueIdentifier>{31c37444-e5d3-4b1a-b49b-2efb6dddbfc4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Loops">
+      <UniqueIdentifier>{0dba1054-33ba-4030-b7de-45a3e63a4c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Interactions">
+      <UniqueIdentifier>{44db3abc-e14a-489e-b1b6-82d8821bba2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{38108249-70e4-41b4-97e6-9070a38c1416}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Grouping">
+      <UniqueIdentifier>{44121a35-4c67-40ba-b8cb-3d163bbf863f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{61e9db57-bde1-4541-a988-4d0f71d829d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main Program">
+      <UniqueIdentifier>{6763cd85-23e5-41ca-a78f-174a40df4ca1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Interactions.cpp">
+      <Filter>Interactions</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Diagram.cpp">
+      <Filter>Diagrams</Filter>
+    </ClCompile>
+    <ClCompile Include="Groups.cpp">
+      <Filter>Grouping</Filter>
+    </ClCompile>
+    <ClCompile Include="FeyndDiagram.cpp">
+      <Filter>Main Program</Filter>
+    </ClCompile>
+    <ClCompile Include="Process.cpp">
+      <Filter>Diagrams</Filter>
+    </ClCompile>
+    <ClCompile Include="Connection.cpp">
+      <Filter>Diagrams</Filter>
+    </ClCompile>
+    <ClCompile Include="Timer.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Point.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="getSubsets.cpp">
+      <Filter>Grouping</Filter>
+    </ClCompile>
+    <ClCompile Include="Particle.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Interactions</Filter>
+    </ClCompile>
+    <ClCompile Include="LoopDiagram.cpp">
+      <Filter>Loops</Filter>
+    </ClCompile>
+    <ClCompile Include="LoopyVertex.cpp">
+      <Filter>Loops</Filter>
+    </ClCompile>
+    <ClCompile Include="LoopSignatures.cpp">
+      <Filter>Loops</Filter>
+    </ClCompile>
+    <ClCompile Include="1PI.cpp">
+      <Filter>Loops</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Interactions.h">
+      <Filter>Interactions</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Diagram.h">
+      <Filter>Diagrams</Filter>
+    </ClInclude>
+    <ClInclude Include="Groups.h">
+      <Filter>Grouping</Filter>
+    </ClInclude>
+    <ClInclude Include="FeyndDiagram.h">
+      <Filter>Main Program</Filter>
+    </ClInclude>
+    <ClInclude Include="Process.h">
+      <Filter>Diagrams</Filter>
+    </ClInclude>
+    <ClInclude Include="Connection.h">
+      <Filter>Diagrams</Filter>
+    </ClInclude>
+    <ClInclude Include="Timer.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Point.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="getSubsets.h">
+      <Filter>Grouping</Filter>
+    </ClInclude>
+    <ClInclude Include="Particle.h">
+      <Filter>Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="UserModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Interactions</Filter>
+    </ClInclude>
+    <ClInclude Include="LoopyVertex.h">
+      <Filter>Loops</Filter>
+    </ClInclude>
+    <ClInclude Include="LoopDiagram.h">
+      <Filter>Loops</Filter>
+    </ClInclude>
+    <ClInclude Include="LoopSignatures.h">
+      <Filter>Loops</Filter>
+    </ClInclude>
+    <ClInclude Include="1PI.h">
+      <Filter>Loops</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
