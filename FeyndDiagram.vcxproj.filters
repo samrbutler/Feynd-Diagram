@@ -135,5 +135,6 @@
     <ClInclude Include="1PI.h">
       <Filter>Loops</Filter>
     </ClInclude>
+    <ClInclude Include="Grouping.h" />
   </ItemGroup>
 </Project>
