@@ -24,11 +24,10 @@ std::vector<LoopyVertex> getLoopyVertices(const int max_loops, const loopdict& d
 			particles.push_back(Particle(particlename));
 		}
 		//Get all the groupings
-		listofpairedgroupings legpermutations{
-			getGroupings(std::make_pair(std::vector<std::vector<Particle>> {}, std::vector<Particle>{particles})) };
+		listofpairedgroups legpermutations{Grouping(particles).possible_groupings};
 
 		//Go through each grouping of the vertex legs
-		for (const pairedgrouping& perm : legpermutations) {
+		for (const pairedgroup& perm : legpermutations) {
 
 			//Get the number of groups
 			size_t num_groups{ perm.first.size() };

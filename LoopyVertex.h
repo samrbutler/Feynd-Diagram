@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Diagram.h"
-#include "Groups.h"
+#include "Grouping.h"
 #include "Model.h"
 #include "Particle.h"
 

@@ -28,12 +28,14 @@ std::vector<LoopDiagram> connect1PI(const LoopDiagram& diag, const int num_loops
 	//Choose how many more particles are going to combine before spawning the loop
 	for (int i{ 0 }; i <= std::min(static_cast<int>(external_particles.size()) - 2, Model::max_legs - 2); ++i) {
 		//Get the list of new particles that are going to combine
-		listofpairedgroupings choices{ getSubsets(particles_available, i,i) };
+
+		SubsetList choices(particles_available, i, i);
+
 		//For each choice:
-		for (const pairedgrouping& pg : choices) {
+		for (const pairedsubset& pg : choices.subsets) {
 			//Set up the list of particles to combine
 			std::vector<Particle> to_combine{ loop_start };
-			to_combine.insert(to_combine.end(), pg.first[0].begin(), pg.first[0].end());
+			to_combine.insert(to_combine.end(), pg.first.begin(), pg.first.end());
 
 			//Set up the list of particles that will be left over
 			std::vector<Particle> particles_available_after_grouping{ pg.second };
@@ -65,6 +67,11 @@ std::vector<LoopDiagram> connect1PI(const LoopDiagram& diag, const int num_loops
 
 				LoopDiagram base_subdiagram(new_externs);
 				//Connect the subdiagram
+				/*
+					This is not behaving as intended at present - the 1PI connection algorithm should call
+					the full connection algorithm on the subdiagram, not a 1PI algorithm. This will be
+					fixed later.				
+				*/
 
 				std::vector<LoopDiagram> subdiagrams{ connect1PISubdiagram(base_subdiagram, remaining_loops, loopyvs, nto0, nto1) };
 				for (LoopDiagram& ld : subdiagrams) {
@@ -152,11 +159,11 @@ std::vector<LoopDiagram> connect1PISubdiagram(LoopDiagram& diag, const int num_l
 	returnvec.insert(returnvec.end(), direct_completions.begin(), direct_completions.end());
 
 	//Group up particles in groups of size >= 1
-	pairedgrouping input{ std::make_pair(grouping{},externs) };
-	listofpairedgroupings groupinglist{ getGroupings(input,1) };
+
+	listofpairedgroups groupinglist{ Grouping(externs,1).possible_groupings };
 
 	//Go through all groupings
-	for (pairedgrouping& pg : groupinglist) {
+	for (pairedgroup& pg : groupinglist) {
 		//Get the number of groups in the grouping
 		int num_groups{ static_cast<int>(pg.first.size()) };
 
@@ -286,14 +293,11 @@ std::vector<LoopDiagram> connect1PIZero(LoopDiagram& diag, const n0dict& nto0, c
 	//If we don't have a vertex but there are now two or fewer particles left, this process has failed, so return an empty vector
 	else if (s <= 2) return {};
 
-	//Construct the initial (un)grouped vertex list
-	pairedgrouping input{ std::make_pair(grouping{},externs) };
-
 	//Get all possible groupings
-	listofpairedgroupings groupinglist{ getGroupings(input) };
+	listofpairedgroups groupinglist{ Grouping(externs).possible_groupings };
 
 	//For each grouping in the list...
-	for (pairedgrouping grp : groupinglist) {
+	for (pairedgroup grp : groupinglist) {
 		//...get a list of possible new products for this group
 		listofproducts prodlist{ getNewExterns(grp, nto1) };
 

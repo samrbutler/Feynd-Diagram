@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Groups.h"
+#include "Grouping.h"
 #include "Interactions.h"
 #include "Model.h"
 #include "Particle.h"

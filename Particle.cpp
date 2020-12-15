@@ -26,6 +26,10 @@ Particle Particle::toggleAntiPart()
 //Overload operator < to sort particle vectors by their first elements
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2)
 {
+	if (vec1.size() == 0 && vec2.size() == 0) return false;
+
+	if (vec1.size() == 0) return true;
+	else if (vec2.size() == 0) return false;
 	return (vec1[0] < vec2[0]);
 }
 

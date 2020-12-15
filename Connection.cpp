@@ -42,14 +42,11 @@ std::vector<Diagram> connect(Diagram& diag, const n0dict& nto0, const n1dict& nt
 		return {};
 	}
 
-	//Construct the initial (un)grouped vertex list
-	pairedgrouping input{ std::make_pair(grouping{},externs) };
-
 	//Get all possible groupings
-	listofpairedgroupings groupinglist{ getGroupings(input) };
+	listofpairedgroups groupinglist{ Grouping(externs).possible_groupings };
 
 	//For each grouping in the list...
-	for (pairedgrouping& grp : groupinglist) {
+	for (pairedgroup& grp : groupinglist) {
 		//...get a list of possible new products for this group
 		listofproducts prodlist{ getNewExterns(grp, nto1) };
 		

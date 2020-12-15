@@ -82,6 +82,10 @@
     <ClCompile Include="1PI.cpp">
       <Filter>Loops</Filter>
     </ClCompile>
+    <ClCompile Include="Grouping.cpp">
+      <Filter>Grouping</Filter>
+    </ClCompile>
+    <ClCompile Include="Subsets.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interactions.h">
@@ -135,6 +139,12 @@
     <ClInclude Include="1PI.h">
       <Filter>Loops</Filter>
     </ClInclude>
-    <ClInclude Include="Grouping.h" />
+    <ClInclude Include="Grouping.h">
+      <Filter>Grouping</Filter>
+    </ClInclude>
+    <ClInclude Include="numBitsSet.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Subsets.h" />
   </ItemGroup>
 </Project>

@@ -15,10 +15,10 @@ std::multiset<P> vec2multiset(const std::vector<Particle>& group)
 }
 
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return if the pairedgrouping produces allowable interactions
-bool isGroupingValid(const pairedgrouping& pair, const n1dict& dictionary)
+bool isGroupingValid(const pairedgroup& pair, const n1dict& dictionary)
 {
 	//Get the grouplist
-	grouping grouplist{ pair.first };
+	group grouplist{ pair.first };
 
 	//Exit early if the group is empty
 	if (grouplist.size() == 0) return false;
@@ -74,7 +74,7 @@ std::vector<P> getProducts(const std::vector<Particle>& group, const n1dict& dic
 }
 
 //Given a 'pairedgrouping' and a n->1 interaction dictionary, return the products expected from the implied interaction
-listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1)
+listofproducts getNewExterns(const pairedgroup& pair, const n1dict& nto1)
 {
 	//Empty container
 	listofproducts container;
@@ -85,7 +85,7 @@ listofproducts getNewExterns(const pairedgrouping& pair, const n1dict& nto1)
 	}
 	else {
 		//Get the grouped elements
-		const grouping& groups{ pair.first };
+		const group& groups{ pair.first };
 
 		//Count how many groups there are
 		int numgroups = static_cast<int>(groups.size());

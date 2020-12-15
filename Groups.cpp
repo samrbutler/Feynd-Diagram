@@ -34,8 +34,20 @@ listofpairedgroupings getGroupings(const pairedgrouping& pairup, const int min_s
 				toadd.insert(toadd.end(), currentgroups.begin(), currentgroups.end());
 				toadd.insert(toadd.end(), newgroup.first.begin(), newgroup.first.end());
 
+				pairedgrouping pg{ std::make_pair(toadd, newgroup.second) };
+
+				for (size_t j{}; j < pg.first.size(); ++j) {
+					//Sort this group
+					std::sort(pg.first[j].begin(), pg.first[j].end());
+				}
+
+				//Sort the overall grouping
+				std::sort(pg.first.begin(), pg.first.end());
+
+
+
 				//Add this new grouping to the output
-				list.push_back(std::make_pair(toadd, newgroup.second));
+				list.push_back(pg);
 			}
 		}
 	}
@@ -44,14 +56,6 @@ listofpairedgroupings getGroupings(const pairedgrouping& pairup, const int min_s
 
 	//Loop over groupings
 	for (size_t i{}; i < list.size(); ++i) {
-		//Loop over each group in the grouping
-		for (size_t j{}; j < list[i].first.size(); ++j) {
-			//Sort this group
-			std::sort(list[i].first[j].begin(), list[i].first[j].end());
-		}
-
-		//Sort the overall grouping
-		std::sort(list[i].first.begin(), list[i].first.end());
 
 		//This will get set to true if there is a duplicate
 		bool isfound{ false };

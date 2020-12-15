@@ -7,6 +7,7 @@
 #include "LoopyVertex.h"
 #include "Model.h"
 #include "Particle.h"
+#include "Subsets.h"
 #include "Vertex.h"
 
 #include <set>
