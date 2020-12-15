@@ -17,7 +17,7 @@ class Grouping
 {
 public:
 	listofpairedgroups possible_groupings;
-
+private:
 	listofpairedgroups getGroupings(const pairedgroup& pairup, const int min_size);
 public:
 	Grouping(const std::vector<Particle>& particles, const int min_size = 2);
