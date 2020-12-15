@@ -65,7 +65,15 @@ listofpairedgroups Grouping::getGroupings(const pairedgroup& pairup, const int m
 			}
 		}
 	}
+	return list;
+}
 
+Grouping::Grouping(const std::vector<Particle>& particles, const int min_size)
+{
+	listofpairedgroups list{ getGroupings(std::make_pair(group{}, particles), min_size) };
+
+	//Now remove duplicates
+	
 	//Set up container
 	listofpairedgroups nodupes{};
 
@@ -83,52 +91,7 @@ listofpairedgroups Grouping::getGroupings(const pairedgroup& pairup, const int m
 		//If we haven't found this grouping yet, add it to the list
 		if (!isfound) nodupes.push_back(list[i]);
 	}
-	return nodupes;
-}
 
+	possible_groupings = nodupes;
 
-//Temporary function: this will be removed
-std::vector<pairedgroup> Grouping::getSubsets(const std::vector<Particle>& input, const size_t min_size,
-	const size_t max_size)
-{
-	//Set up the container
-	std::vector<pairedgroup> pairings{};
-
-	//Loop over all binary representations from 0 to 2^(number of particles)-1
-	for (int i{}; i < pow(2, input.size()); ++i) {
-
-		if (numBitsSet(i) > max_size) continue;
-
-		//Set up containers
-		std::vector<Particle> subset{};
-		std::vector<Particle> notsubset{};
-
-		//Loop over all the bits in i
-		for (size_t j{}; j < input.size(); ++j) {
-			//If the bit j is a 1, add the jth particle to the subset
-			if ((i & (1 << j)) != 0) subset.push_back(input[j]);
-			//If not, add it to the ungrouped set
-			else notsubset.push_back(input[j]);
-		}
-
-		//We don't care about the subset if it is size 1 or trivial
-		if (subset.size() >= min_size) {
-			//Create and add the subset to a vector of vectors
-			std::vector<std::vector<Particle>> toadd{};
-			toadd.push_back(subset);
-
-			//Pair up the subset and its complement
-			pairedgroup pairup{ std::make_pair(toadd, notsubset) };
-
-			//Add it to the return vector
-			pairings.push_back(pairup);
-		}
-	}
-
-	return pairings;
-}
-
-Grouping::Grouping(const std::vector<Particle>& particles, const int min_size)
-{
-	possible_groupings = getGroupings(std::make_pair(group{}, particles), min_size);
 }

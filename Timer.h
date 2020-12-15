@@ -1,6 +1,8 @@
 #pragma once
 
 #include <chrono>
+#include <iostream>
+#include <string>
 
 class Timer
 {
@@ -16,4 +18,6 @@ public:
 	void reset() { m_beg = clock_t::now(); }
 
 	double elapsed() const;
+
+	void lap(std::string prefix = "Time elapsed: ");
 };

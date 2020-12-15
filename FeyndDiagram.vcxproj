@@ -150,13 +150,11 @@
     <ClCompile Include="Grouping.cpp" />
     <ClCompile Include="LoopDiagram.cpp" />
     <ClCompile Include="Connection.cpp" />
-    <ClCompile Include="getSubsets.cpp" />
     <ClCompile Include="LoopyVertex.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="Process.cpp" />
     <ClCompile Include="Diagram.cpp" />
     <ClCompile Include="FeyndDiagram.cpp" />
-    <ClCompile Include="Groups.cpp" />
     <ClCompile Include="Interactions.cpp" />
     <ClCompile Include="1PI.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -173,8 +171,6 @@
     <ClInclude Include="Connection.h" />
     <ClInclude Include="Diagram.h" />
     <ClInclude Include="FeyndDiagram.h" />
-    <ClInclude Include="getSubsets.h" />
-    <ClInclude Include="Groups.h" />
     <ClInclude Include="Interactions.h" />
     <ClInclude Include="1PI.h" />
     <ClInclude Include="LoopyVertex.h" />

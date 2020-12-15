@@ -159,9 +159,8 @@ std::vector<LoopDiagram> connect1PISubdiagram(LoopDiagram& diag, const int num_l
 	returnvec.insert(returnvec.end(), direct_completions.begin(), direct_completions.end());
 
 	//Group up particles in groups of size >= 1
-
 	listofpairedgroups groupinglist{ Grouping(externs,1).possible_groupings };
-
+	
 	//Go through all groupings
 	for (pairedgroup& pg : groupinglist) {
 		//Get the number of groups in the grouping
@@ -295,7 +294,6 @@ std::vector<LoopDiagram> connect1PIZero(LoopDiagram& diag, const n0dict& nto0, c
 
 	//Get all possible groupings
 	listofpairedgroups groupinglist{ Grouping(externs).possible_groupings };
-
 	//For each grouping in the list...
 	for (pairedgroup grp : groupinglist) {
 		//...get a list of possible new products for this group

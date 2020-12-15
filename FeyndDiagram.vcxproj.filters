@@ -43,9 +43,6 @@
     <ClCompile Include="Diagram.cpp">
       <Filter>Diagrams</Filter>
     </ClCompile>
-    <ClCompile Include="Groups.cpp">
-      <Filter>Grouping</Filter>
-    </ClCompile>
     <ClCompile Include="FeyndDiagram.cpp">
       <Filter>Main Program</Filter>
     </ClCompile>
@@ -60,9 +57,6 @@
     </ClCompile>
     <ClCompile Include="Point.cpp">
       <Filter>Particles</Filter>
-    </ClCompile>
-    <ClCompile Include="getSubsets.cpp">
-      <Filter>Grouping</Filter>
     </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>Particles</Filter>
@@ -85,7 +79,9 @@
     <ClCompile Include="Grouping.cpp">
       <Filter>Grouping</Filter>
     </ClCompile>
-    <ClCompile Include="Subsets.cpp" />
+    <ClCompile Include="Subsets.cpp">
+      <Filter>Grouping</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interactions.h">
@@ -96,9 +92,6 @@
     </ClInclude>
     <ClInclude Include="Diagram.h">
       <Filter>Diagrams</Filter>
-    </ClInclude>
-    <ClInclude Include="Groups.h">
-      <Filter>Grouping</Filter>
     </ClInclude>
     <ClInclude Include="FeyndDiagram.h">
       <Filter>Main Program</Filter>
@@ -114,9 +107,6 @@
     </ClInclude>
     <ClInclude Include="Point.h">
       <Filter>Particles</Filter>
-    </ClInclude>
-    <ClInclude Include="getSubsets.h">
-      <Filter>Grouping</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
       <Filter>Particles</Filter>
@@ -145,6 +135,8 @@
     <ClInclude Include="numBitsSet.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Subsets.h" />
+    <ClInclude Include="Subsets.h">
+      <Filter>Grouping</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
