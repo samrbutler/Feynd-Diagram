@@ -63,7 +63,7 @@ namespace Model
 	{
 		//{P::phi,P::phi,P::phi,P::phi},
 		//{P::phi,P::phi,P::chi,P::chi},
-		//{P::phi,P::psi,P::antipsi}
-		{P::phi,P::phi,P::phi}
+		{P::phi,P::psi,P::antipsi}
+		//{P::phi,P::phi,P::phi}
 	};
 }

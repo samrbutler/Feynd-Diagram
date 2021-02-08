@@ -147,6 +147,7 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Fragments.cpp" />
     <ClCompile Include="Grouping.cpp" />
     <ClCompile Include="LoopDiagram.cpp" />
     <ClCompile Include="Connection.cpp" />

@@ -82,6 +82,7 @@
     <ClCompile Include="Subsets.cpp">
       <Filter>Grouping</Filter>
     </ClCompile>
+    <ClCompile Include="Fragments.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interactions.h">

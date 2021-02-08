@@ -34,15 +34,17 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 		if (lv.external_particles_in == inbound_types
 			&& lv.num_loops + (static_cast<int>(lv.external_particles_out.size()) - 1) <= max_loops
 			&& lv.external_particles_out.size() >= 2
-			) {
+			)
+		{
 			new_loops.push_back(std::make_pair(lv.external_particles_out, lv));
 		}
 	}
 
 	//Go through all the normal vertices and add any matches
-	for (auto interaction : Model::n_to_many) {
+	for (const auto& interaction : Model::n_to_many) {
 		if (interaction.first == inbound_types
-			&& static_cast<int>(interaction.second.size()) - 1 <= max_loops) {
+			&& static_cast<int>(interaction.second.size()) - 1 <= max_loops)
+		{
 			new_loops.push_back(std::make_pair(interaction.second, LV_null));
 		}
 	}
@@ -50,7 +52,7 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 	newloopvalues output;
 
 	//Go through each profile in the new list
-	for (auto profile : new_loops) {
+	for (const auto& profile : new_loops) {
 
 		//Get the number of spawned loops
 		int num_loops_spawned{ static_cast<int>(profile.first.size()) - 1 };
@@ -77,9 +79,23 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 
 		//Get the additional inbound loop momentum signature
 		std::vector<int> inbound_loop_signature{ getLoopSignature(inbound) };
-		//And add it to each of the new particles
-		for (Particle& p : new_particles) {
-			p.addLoop(inbound_loop_signature);
+		//Add it to each of the new particles, and also sort out the identicality indices to group identical particles
+		auto ptr1{ new_particles.begin() };
+		while (ptr1 != new_particles.end()) {
+			ptr1->addLoop(inbound_loop_signature);
+			if (!ptr1->hasIdenticality()) {
+				auto ptr2 = ptr1 + 1;
+				while (ptr2 != new_particles.end()) {
+					if (ptr1->getType() == ptr2->getType()) {
+						if (!ptr1->hasIdenticality())
+							ptr1->setIdenticality(LoopDiagram::global_identicality_index++);
+						ptr2->setIdenticality(ptr1->getIdenticality());
+					}
+					++ptr2;
+				}
+			}
+
+			++ptr1;
 		}
 
 		//Add the results to the possiblities

@@ -19,6 +19,8 @@ class Particle : public Point
 	std::vector<int> m_loops;
 	//Is this particle external, i.e. is it allowed to carry loop momentum?
 	bool m_external;
+	//What particles is this identical to?
+	int m_identicality;
 
 public:
 
@@ -28,6 +30,11 @@ public:
 	bool isActive() const { return m_active; }
 	//Return the loop participation
 	std::vector<int> getLoops() const { return m_loops; }
+	//Return the identicality index
+	int getIdenticality() const { return m_identicality; }
+	//Set the identicality index
+	void setIdenticality(int ical) { m_identicality = ical; }
+	bool hasIdenticality() const { return m_identicality != -1; }
 
 	//Add and subtract loop momenta from the current particle (a negative input removes the loop)
 	Particle addLoop(const std::vector<int> loop_ids);
@@ -43,11 +50,11 @@ public:
 
 	//Construct given particle type and (optionally) activity and externality
 	Particle(const P PType, const bool isAct = true, const bool isExt = true)
-		: m_ptype{ PType }, m_active{ isAct }, m_loops{}, m_external{ isExt } {}
+		: m_ptype{ PType }, m_active{ isAct }, m_loops{}, m_external{ isExt }, m_identicality{ -1 } {}
 
 	//Construct given particle type, activity and the loop property
 	Particle(const P PType, const bool isAct, const std::vector<int> loops)
-		: m_ptype{ PType }, m_active{ isAct }, m_loops{ loops }, m_external{ false } {}
+		: m_ptype{ PType }, m_active{ isAct }, m_loops{ loops }, m_external{ false }, m_identicality{ -1 } {}
 };
 
 bool operator<(const std::vector<Particle>& vec1, const std::vector<Particle>& vec2);
