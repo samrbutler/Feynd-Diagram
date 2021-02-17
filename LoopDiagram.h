@@ -15,8 +15,6 @@ class LoopDiagram : public Diagram
 public:
 
 	static int global_loop_counter;
-	static int global_identicality_index;
-
 
 	LoopDiagram(const Diagram& diag) : Diagram(diag) {}
 

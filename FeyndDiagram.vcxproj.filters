@@ -83,6 +83,9 @@
       <Filter>Grouping</Filter>
     </ClCompile>
     <ClCompile Include="Fragments.cpp" />
+    <ClCompile Include="IdenticalityDictionary.cpp">
+      <Filter>Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Interactions.h">
@@ -138,6 +141,9 @@
     </ClInclude>
     <ClInclude Include="Subsets.h">
       <Filter>Grouping</Filter>
+    </ClInclude>
+    <ClInclude Include="IdenticalityDictionary.h">
+      <Filter>Particles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

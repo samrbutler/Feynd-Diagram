@@ -149,6 +149,7 @@
   <ItemGroup>
     <ClCompile Include="Fragments.cpp" />
     <ClCompile Include="Grouping.cpp" />
+    <ClCompile Include="IdenticalityDictionary.cpp" />
     <ClCompile Include="LoopDiagram.cpp" />
     <ClCompile Include="Connection.cpp" />
     <ClCompile Include="LoopyVertex.cpp" />
@@ -167,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grouping.h" />
+    <ClInclude Include="IdenticalityDictionary.h" />
     <ClInclude Include="numBitsSet.h" />
     <ClInclude Include="LoopDiagram.h" />
     <ClInclude Include="Connection.h" />

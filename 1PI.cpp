@@ -36,7 +36,7 @@ std::vector<LoopDiagram> connect1PI(const LoopDiagram& diag, const int num_loops
             pg.first.insert(pg.first.begin(), loop_start);
         }
 
-        //Remove physically identical groupings using identicality indices:
+        //Remove physically identical completions using identicality indices:
 
         //Create a set to keep track of "grouping" signatures
         std::set<std::map<int, int>> signature_dictionary;
@@ -175,13 +175,46 @@ std::vector<LoopDiagram> connectLoopDiagram(LoopDiagram& diag, const int num_loo
     //Group up particles in groups of size >= 1
     listofpairedgroups groupinglist{ Grouping(externs,1).possible_groupings };
 
-    //TODO: Add code to check for and remove physical identicality in the grouping list
+    //Remove identical groupings:
+    //A set of grouping signatures: We store multisets where each map in the multiset describes the identicality structure of each grouping
+    std::set<std::multiset<std::map<int, int>>> signature_dictionary;
+    //Loop through all groupings
+    int loc{};
+    while (loc < groupinglist.size()) {
+        //Consider the current grouping
+        std::multiset<std::map<int, int>> current_grouping_signature;
+        //Go through each group in the grouping
+        for (const auto& particle_group : groupinglist[loc].first) {
+            //Set up the signature for this group
+            std::map<int, int> current_group_signature;
+            //Go through each particle in the group
+            for (const Particle& p : particle_group) {
+                //If the particle has an identicality condition, increase the number of occurrences in the signature
+                if (p.hasIdenticality()) {
+                    ++current_group_signature[p.getIdenticality()];
+                }
+                //If not, then it is a distinguished particle: add the negative of its ID (all IDs are strictly positive)
+                else {
+                    ++current_group_signature[-p.getID()];
+                }
+            }
+            //Add this signature to the grouping multiset
+            current_grouping_signature.insert(current_group_signature);
+        }
+        //Check if we need to remove this grouping because it is a duplicate
+        if (signature_dictionary.find(current_grouping_signature) == signature_dictionary.end()) {
+            signature_dictionary.insert(current_grouping_signature);
+            ++loc;
+        }
+        else {
+            groupinglist.erase(groupinglist.begin() + loc);
+        }
+    }
 
     //Go through all groupings
     for (pairedgroup& pg : groupinglist) {
         //Get the number of groups in the grouping
         int num_groups{ static_cast<int>(pg.first.size()) };
-
 
         //TODO: What on earth have I done here? Sort it out...
 
@@ -317,6 +350,43 @@ std::vector<LoopDiagram> connectLoopDiagramZero(LoopDiagram& diag, const n0dict&
 
     //Get all possible groupings
     listofpairedgroups groupinglist{ Grouping(externs).possible_groupings };
+
+    //Remove identical groupings:
+    //A set of grouping signatures: We store multisets where each map in the multiset describes the identicality structure of each grouping
+    std::set<std::multiset<std::map<int, int>>> signature_dictionary;
+    //Loop through all groupings
+    int loc{};
+    while (loc < groupinglist.size()) {
+        //Consider the current grouping
+        std::multiset<std::map<int, int>> current_grouping_signature;
+        //Go through each group in the grouping
+        for (const auto& particle_group : groupinglist[loc].first) {
+            //Set up the signature for this group
+            std::map<int, int> current_group_signature;
+            //Go through each particle in the group
+            for (const Particle& p : particle_group) {
+                //If the particle has an identicality condition, increase the number of occurrences in the signature
+                if (p.hasIdenticality()) {
+                    ++current_group_signature[p.getIdenticality()];
+                }
+                //If not, then it is a distinguished particle: add the negative of its ID (all IDs are strictly positive)
+                else {
+                    ++current_group_signature[-p.getID()];
+                }
+            }
+            //Add this signature to the grouping multiset
+            current_grouping_signature.insert(current_group_signature);
+        }
+        //Check if we need to remove this grouping because it is a duplicate
+        if (signature_dictionary.find(current_grouping_signature) == signature_dictionary.end()) {
+            signature_dictionary.insert(current_grouping_signature);
+            ++loc;
+        }
+        else {
+            groupinglist.erase(groupinglist.begin() + loc);
+        }
+    }
+
     //For each grouping in the list...
     for (pairedgroup grp : groupinglist) {
         //...get a list of possible new products for this group

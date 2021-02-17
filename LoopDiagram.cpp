@@ -3,8 +3,6 @@
 //Initialise global loop counter in LoopDiagram
 int LoopDiagram::global_loop_counter{ 1 };
 
-int LoopDiagram::global_identicality_index{ 0 };
-
 void LoopDiagram::addLoopyVertex(const LoopyVertex& lv, const std::vector<Particle>& inbound_parts)
 {
 	//Generate the internal particles

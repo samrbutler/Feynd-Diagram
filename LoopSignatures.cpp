@@ -1,4 +1,5 @@
 #include "LoopSignatures.h"
+#include "IdenticalityDictionary.h"
 
 std::vector<int> getLoopSignature(const std::vector<Particle>& inbound)
 {
@@ -88,7 +89,7 @@ newloopvalues spawnLoops(const std::vector<Particle>& inbound, const int max_loo
 				while (ptr2 != new_particles.end()) {
 					if (ptr1->getType() == ptr2->getType()) {
 						if (!ptr1->hasIdenticality())
-							ptr1->setIdenticality(LoopDiagram::global_identicality_index++);
+							ptr1->setIdenticality(IdenticalityDictionary::global_identicality_index++);
 						ptr2->setIdenticality(ptr1->getIdenticality());
 					}
 					++ptr2;

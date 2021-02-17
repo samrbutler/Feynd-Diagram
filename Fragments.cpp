@@ -1,62 +1,4 @@
-/*
-
-std::vector<LoopDiagram> connectLoopDiagram(LoopDiagram& diag, const int num_loops, const std::vector<LoopyVertex>& loopyvs,
-	const n0dict& nto0, const n1dict& nto1)
-{
-	//NOTE : This is currently generating duplicate diagrams when identical particles are involved. This will be fixed at a later date
-
-	* ALGORITHM
-	*	> Check the loop status of the remaining particles: if none of the particles are carrying loop momentum or
-	*	  the loop momenta do not cancel out then we have failed
-	*	> Check if the remaining particles can connect directly into a simple vertex or 1PI diagram with at least
-	*	  two active particles and the required number of loops. Add all possible successful connections to the list
-	*	> If there are two particles and they haven't connected above, connection has failed, so return early.
-	*	> Otherwise, get all possible groupings of the external particles
-	*		> For each grouping, get all possible vertex-level products and work out their loop momenta
-	*			> If each group does not include at least one active particle, skip this grouping
-	*			> Go through all possible products and get the new external particles.
-	*				> Set these new particles active, the other particles passive and make a subdiagram
-	*				> Use recursion to connect the subdiagram
-	*					> If the subdiagram returned connections, combine the subdiagram into the current diagram and add it to the list
-	*					> If the subdiagram fails to connect, go to the next product
-	*			> If all products failed to produce a connected diagram, continue
-	*		> For each grouping, go through every particle in the theory, and see if we can generate
-	*		  a 1PI diagram to get to this target particle
-	*			- This requires us to generate groupings of size 1
-	*
-
-	const std::vector<Particle>& externs{ diag.getExterns() };
-
-	//If the loop momenta will not cancel out, return early
-	if (getLoopSignature(externs).size() != 0) return {};
-
-	//If no loop momenta are present at all, we have failed
-	bool loops_exist{ false };
-	for (const Particle& p : externs) {
-		if (p.getLoops().size() != 0) loops_exist = true;
-	}
-	if (!loops_exist) return {};
-
-	std::vector<LoopDiagram> returnvec;
-
-	//Store the number of external particles
-	size_t s{ externs.size() };
-
-	//Check to see if we can use a slightly modified standard connection algorithm
-	if (num_loops == 0) {
-
-		std::vector<LoopDiagram> zero_loop_completions{ connectLoopDiagramZero(diag,nto0,nto1) };
-		//Extend these diagrams to loop diagrams and add them to the output
-		for (const LoopDiagram& d : zero_loop_completions) returnvec.push_back(d);
-		return returnvec;
-	}
-	std::vector<LoopDiagram> direct_completions{ connect1PI(diag,num_loops,loopyvs,nto0,nto1) };
-	returnvec.insert(returnvec.end(), direct_completions.begin(), direct_completions.end());
-
-	//Group up particles in groups of size >= 1
-	listofpairedgroups groupinglist{ Grouping(externs,1).possible_groupings };
-
-	//Go through all groupings
+/* Former code from connectLoopDiagram 
 	for (pairedgroup& pg : groupinglist) {
 		//Get the number of groups in the grouping
 		int num_groups{ static_cast<int>(pg.first.size()) };
@@ -165,89 +107,41 @@ std::vector<LoopDiagram> connectLoopDiagram(LoopDiagram& diag, const int num_loo
 	return returnvec;
 }
 
+*/
 
-std::vector<LoopDiagram> connectLoopDiagramZero(LoopDiagram& diag, const n0dict& nto0, const n1dict& nto1, bool isOPI)
-{
 
-	//Store the current external vertices of this diagram
-	const std::vector<Particle>& externs{ diag.getExterns() };
 
-	//Store the number of external particles
-	size_t s{ externs.size() };
+/*
+Identical grouping removal:
 
-	//Create empty return vector to add diagrams to
-	std::vector<LoopDiagram> returnvec;
-
-	//Check to see if we can form a vertex - we've already checked that the momenta cancel out
-	if (diag.isVertex(nto0)) {
-		//Add a diagram consisting of the external points and a vertex connecting them
-		returnvec.emplace_back(LoopDiagram(externs, Vertex(externs)));
-		return returnvec;
-	}
-
-	//If we don't have a vertex but there are now two or fewer particles left, this process has failed, so return an empty vector
-	else if (s <= 2) return {};
-
-	//Get all possible groupings
-	listofpairedgroups groupinglist{ Grouping(externs).possible_groupings };
-	//For each grouping in the list...
-	for (pairedgroup grp : groupinglist) {
-		//...get a list of possible new products for this group
-		listofproducts prodlist{ getNewExterns(grp, nto1) };
-
-		//Skip this grouping if it doesn't produce any valid interactions
-		if ((prodlist.size() == 0 || prodlist.size() == 1) && (prodlist[0].size() == 0)) continue;
-
-		//Go through each possible interaction product
-		for (size_t j{}; j < prodlist.size(); ++j) {
-			//Set up the new particle and vertex containers
-			std::vector<Particle> particlestoadd;
-			std::vector<Vertex> verticestoadd;
-
-			//Go through each of the groups that have been formed
-			for (size_t i{}; i < grp.first.size(); ++i) {
-				//Set up the new particle information containers for vertex production
-				std::vector<Particle> vertexparts{ grp.first[i] };
-				std::vector<int> outbound_signature{ invertLoopSignature(getLoopSignature(vertexparts)) };
-				//Add the new (anti)particle to the external container and add it to the vertex
-				Particle p_to_add(prodlist[j][i], true, outbound_signature);
-				particlestoadd.push_back(p_to_add);
-				vertexparts.push_back(p_to_add.toggleAntiPart());
-
-				//Create and add the vertex to the current diagram
-				verticestoadd.push_back(Vertex(vertexparts));
+		//Create a set to keep track of "grouping" signatures
+		std::set<std::map<int, int>> signature_dictionary;
+		//Loop through all combinations until we've considered all options
+		int loc{};
+		while (loc < choices.subsets.size()) {
+			//Set up the signature for this subset
+			std::map<int, int> current_signature;
+			//Go through all particles that are set to group
+			for (const Particle& p : choices.subsets[loc].first) {
+				//If the particle has an identicality condition, increase the number of occurrences in the signature
+				if (p.hasIdenticality()) {
+					++current_signature[p.getIdenticality()];
+				}
+				//If not, then it is a distinguished particle: add the negative of its ID (all IDs are strictly positive)
+				else {
+					++current_signature[-p.getID()];
+				}
 			}
-
-			//Now add the previous external particles to the new container, setting them inactive first
-			for (Particle& ungrouped : grp.second) {
-				particlestoadd.push_back(ungrouped.setActive(false));
+			//If we haven't seen this signature before, this is a physically distinct grouping, so we leave it be
+			if (signature_dictionary.find(current_signature) == signature_dictionary.end()) {
+				signature_dictionary.insert(current_signature);
+				++loc;
 			}
-
-			//At this point we are ready to create a new subdiagram
-			LoopDiagram subdiag{ particlestoadd };
-
-			//Initiate a recursion by connecting the subdiagram
-			std::vector<LoopDiagram> connectedsds{ connectLoopDiagram(subdiag, 0, Model::loopy_vertices, nto0, nto1) };
-
-			//If we got nothing back, this grouping has failed
-			if (connectedsds.size() == 0) continue;
-
-			//If we got diagrams back, for each subdiagram create a new diagram which combines the vertices...
-			//...and external particles of the current diagram with the vertices of the subdiagram
-			for (LoopDiagram& sd : connectedsds) {
-				LoopDiagram newdiag(diag);
-				newdiag.addVertices(verticestoadd);
-				newdiag.addVertices(sd.getVertices());
-
-				//And add this new diagram to the return vector
-				returnvec.push_back(newdiag);
+			//If we have, this grouping is already included, so remove this copy ([[loc]] is now pointing to the next element)
+			else {
+				choices.subsets.erase(choices.subsets.begin() + loc);
 			}
 		}
-	}
 
-	//We're out of options so jump back up the chain
-	return returnvec;
-
-}
 
 */
