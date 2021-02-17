@@ -114,6 +114,8 @@ std::vector<LoopDiagram> connect1PI(const LoopDiagram& diag, const int num_loops
         }
     }
 
+    //TODO: We need to add a check for the activity of the particles involved in the loop case - at least two particles need to be active.
+    //      Maybe refactor this into a function, we may need to call this more than once
     if (external_particles.size() <= Model::max_legs) {
         //Get the external particle types
         std::multiset<P> externparttypes;
@@ -216,8 +218,7 @@ std::vector<LoopDiagram> connectLoopDiagram(LoopDiagram& diag, const int num_loo
         //Get the number of groups in the grouping
         int num_groups{ static_cast<int>(pg.first.size()) };
 
-        //TODO: What on earth have I done here? Sort it out...
-
+        //TODO: This probably (definitely) needs a refactor. 
 
         //Set up containers to store all possible vertices, loopy vertices and 1PI completions for a group
         using lprods = std::vector<std::pair<Particle, LoopyVertex>>;
@@ -231,13 +232,14 @@ std::vector<LoopDiagram> connectLoopDiagram(LoopDiagram& diag, const int num_loo
             //Get the outbound loop signature
             std::vector<int> loopsig{ invertLoopSignature(getLoopSignature(g)) };
 
+            //Get tree-level products using the nto1 dictionary
             std::vector<P> product_types{ getProducts(g, nto1) };
             std::vector<Particle> product_particles;
             for (P p : product_types) product_particles.push_back(Particle(p, true, loopsig));
-            //Get tree-level products using the nto1 dictionary
             tree_grouping_products.push_back(product_particles);
 
             //Get loopyvertex products using the loopyvertex dictionary
+            //TODO: We need to add a check for the activity of the particles involved - can or should this be absorbed into the grouping code?
             lprods loopy_products;
             if (g.size() < Model::max_legs) {
                 //Go through every possible output product we might expect
@@ -268,8 +270,7 @@ std::vector<LoopDiagram> connectLoopDiagram(LoopDiagram& diag, const int num_loo
                 for (int nl{}; nl <= num_loops; ++nl) {
                     std::vector<Particle> externs = g;
                     externs.push_back(Particle(getAntiParticle(inbound_prod_type)));
-                    //TODO: Change the signature here to pass arguments
-                    std::vector<LoopDiagram> opicompletions{ connect1PI(LoopDiagram(externs),nl) };
+                    std::vector<LoopDiagram> opicompletions{ connect1PI(LoopDiagram(externs),nl, loopyvs, nto0, nto1) };
                     for (LoopDiagram& ld : opicompletions) {
                         opi_products.push_back(std::make_pair(std::make_pair(
                             Particle(getAntiParticle(inbound_prod_type), true, loopsig), ld), nl));

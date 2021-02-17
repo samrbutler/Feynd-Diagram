@@ -17,6 +17,7 @@ bool operator==(const group& part1, const group& part2)
 
 listofpairedgroups Grouping::getGroupings(const pairedgroup& pairup, const int min_size)
 {
+	//TODO: Do we want to check for the activity of the particles involved here?
 	//Create the empty vector of groupings
 	listofpairedgroups list{};
 

@@ -72,7 +72,7 @@ n1dict generateN1Dictionary(const n0dict& inters)
 	return nto1s;
 }
 
-//Given the n->1 dictionary, return all possible k->m interactions where m>2
+//Given the n->1 dictionary, return all possible k->m interactions where m>=2
 loopdict getLoopDictionary(const n1dict& inters)
 {
 	//Create empty container
@@ -87,7 +87,7 @@ loopdict getLoopDictionary(const n1dict& inters)
 		for (int num_incoming{ 1 }; num_incoming < static_cast<int>(s); ++num_incoming) {
 			//We need to select num_incoming-1 particles to move from the left hand of the interaction to the right
 			//Set up a bitmask with num_incoming-1 1s and then enough 0s to make up the slack
-			std::string bitmask((long) num_incoming - 1, '1');
+			std::string bitmask(static_cast<long>(num_incoming) - 1, '1');
 			bitmask.resize(s, '0');
 			do {
 				//Keep the current output particle as a new input particle
@@ -113,5 +113,6 @@ loopdict getLoopDictionary(const n1dict& inters)
 			} while (std::prev_permutation(bitmask.begin(), bitmask.end()));
 		}
 	}
+
 	return dict;
 }
